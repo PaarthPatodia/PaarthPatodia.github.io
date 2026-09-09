@@ -1,5 +1,15 @@
 # Paarth Patodia — portfolio site
 
+Live at **https://paarthpatodia.github.io/** (GitHub Pages, served from the `main` branch of `PaarthPatodia/PaarthPatodia.github.io`).
+
+To publish a change: edit, then from this folder
+
+```
+git add -A && git commit -m "describe the change" && git push
+```
+
+GitHub Pages rebuilds in under a minute.
+
 A single static page: `index.html`, one stylesheet, one small script, self-hosted fonts, three linked figure PNGs and the resume PDF. No build step is needed to deploy; no backend, no analytics, no third-party requests.
 
 ## Deploy
