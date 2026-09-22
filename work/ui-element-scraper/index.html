@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UI Element Scraper, a case study by Paarth Patodia</title>
+<meta name="description" content="A Java and Selenium tool that signs into a web application and crawls it depth-first to inventory every interactive control, including those behind modals, tabs and menus, with stable locators and suggested test cases.">
+<meta name="author" content="Paarth Patodia">
+<meta name="theme-color" content="#F4F4F1">
+<meta name="color-scheme" content="light">
+<link rel="canonical" href="https://paarthpatodia.github.io/work/ui-element-scraper/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Paarth Patodia">
+<meta property="og:title" content="UI Element Scraper">
+<meta property="og:description" content="A Java and Selenium tool that signs into a web application and crawls it depth-first to inventory every interactive control, including those behind modals, tabs and menus, with stable locators and suggested test cases.">
+<meta property="og:url" content="https://paarthpatodia.github.io/work/ui-element-scraper/">
+<meta property="og:image" content="https://paarthpatodia.github.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Paarth Patodia, electrical engineering student at UMass Amherst: battery analysis tools and embedded systems.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23F4F4F1'/%3E%3Cpath d='M4 11h5l2 12 4-7 5-3 6-1' fill='none' stroke='%2317191D' stroke-width='2.2' stroke-linejoin='round' stroke-linecap='round'/%3E%3Ccircle cx='26' cy='12' r='3.4' fill='%230B6E55'/%3E%3C/svg%3E">
+<link rel="preload" href="../../assets/fonts/bricolage-grotesque-200-800-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../assets/fonts/ibm-plex-mono-400-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/site.css">
+<script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#B9BDB6" stroke-width="1"/>
+    </pattern>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0.5 L9.5 5 L0 9.5 z" fill="#17191D"/>
+    </marker>
+    <marker id="arrowhead-soft" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0.5 L9.5 5 L0 9.5 z" fill="#6B727A"/>
+    </marker>
+  </defs>
+</svg>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../../" aria-label="Paarth Patodia, home">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="26" height="26" aria-hidden="true" focusable="false"><path d="M3 11h5l2 12 4-7 5-3 7-1" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="27" cy="12" r="3.4" fill="#0B6E55"/></svg>
+      <span>Paarth Patodia</span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu" hidden>
+      <span class="menu-toggle-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="menu-toggle-label">Menu</span>
+    </button>
+    <nav id="site-menu" class="menu" aria-label="Site">
+      <ul class="menu-list" role="list">
+        <li><a href="../../#work" aria-current="page">Work</a></li>
+        <li><a href="../../#experience">Experience</a></li>
+        <li><a href="../../#about">About</a></li>
+        <li><a href="../../#contact">Contact</a></li>
+      </ul>
+      <a class="btn btn-primary btn-small menu-resume" href="../../assets/Paarth_Patodia_Resume.pdf" download>Résumé (PDF)</a>
+    </nav>
+  </div>
+</header>
+
+
+<main id="main">
+
+<header class="case-head container">
+  <ol class="crumbs" role="list"><li><a href="../../">Home</a></li><li><a href="../../#work">Work</a></li><li>UI Element Scraper</li></ol>
+  <h1>UI Element Scraper</h1>
+  <p class="standfirst">A Java tool that signs into a web application, crawls it depth-first through modals, tabs and menus, and writes a spreadsheet of every interactive control it reached, each with a stable locator and suggested test cases.</p>
+  <dl class="case-meta">
+    <div><dt>Role</dt><dd>Designer and builder of the crawler and inventory. A companion test-execution layer was started with a senior engineer and is unfinished.</dd></div>
+    <div><dt>Origin and dates</dt><dd>Began as QA tooling during the Cardbyte internship (July to August 2025); developed into a standalone open-source tool.</dd></div>
+    <div><dt>Stack</dt><dd>Java 11+, Selenium 4 (driver resolved by Selenium Manager), Maven, Apache POI for Excel output</dd></div>
+    <div><dt>Repository</dt><dd><a href="https://github.com/PaarthPatodia/ui-element-scraper">github.com/PaarthPatodia/ui-element-scraper</a>, MIT licence</dd></div>
+  </dl>
+  <div class="case-actions">
+    <a class="btn btn-primary btn-small" href="https://github.com/PaarthPatodia/ui-element-scraper">Repository on GitHub</a>
+    <a class="btn btn-secondary btn-small" href="https://github.com/PaarthPatodia/ui-element-scraper/blob/main/docs/DESIGN_DECISIONS.md">Design decisions</a>
+    <a class="btn btn-secondary btn-small" href="https://github.com/PaarthPatodia/ui-element-scraper/blob/main/docs/ARCHITECTURE.md">Architecture</a>
+  </div>
+</header>
+
+<div class="container">
+  <section class="key-result" aria-labelledby="kr-h">
+    <h2 id="kr-h">Key result</h2>
+    <div class="kr-text">
+      <p>Run for this page against a small local demo application (a sign-in page and a contacts page with a modal, a tab set and a menu), the crawler inventoried 30 controls in 33 seconds at depth 1. Twenty of them existed only after a click: twelve inside the modal, five in the hidden tab, three in the menu. A flat scan of the loaded page would have recorded ten.</p>
+      <p>Every locator in the run was anchored on a stable <code>id</code>. On a real application that share is the most useful number in the report: it says whether a test suite built on the inventory will survive the next refactor.</p>
+    </div>
+    <div class="kr-table tbl-scroll">
+      <table class="tbl tbl--dense">
+        <caption>Summary sheet of the demonstration run, 22 September 2026. The demo application was written for this page so the run touches nothing private and clicks nothing consequential.</caption>
+        <thead><tr><th scope="col">Measure</th><th scope="col" class="num">Value</th></tr></thead>
+        <tbody>
+          <tr><td>Elements recorded</td><td class="num">30</td></tr>
+          <tr><td>Reachable without a click (depth 0)</td><td class="num">10</td></tr>
+          <tr><td>Reachable only after a click (depth 1)</td><td class="num">20</td></tr>
+          <tr><td>Contexts visited</td><td class="num">4</td></tr>
+          <tr><td>Triggers activated</td><td class="num">9</td></tr>
+          <tr><td>Locators anchored on a stable id</td><td class="num">30 of 30</td></tr>
+          <tr><td>Elapsed</td><td class="num">33 s</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div class="container case-body">
+  <nav class="case-toc" aria-label="On this page">
+    <h2>On this page</h2>
+    <ol role="list">
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#built">What I built</a></li>
+      <li><a href="#decisions">Engineering decisions</a></li>
+      <li><a href="#demo">Demonstration</a></li>
+      <li><a href="#validation">Validation</a></li>
+      <li><a href="#limits">Limitations and status</a></li>
+      <li><a href="#links">Repository and related work</a></li>
+    </ol>
+  </nav>
+
+  <div class="case-main">
+
+    <section id="problem" class="case-section" aria-labelledby="problem-h">
+      <h2 id="problem-h">Problem</h2>
+      <div class="prose">
+        <p>Writing a UI test suite starts with an inventory: what is on this page, how do I address it, and what should I assert about it? Built by hand, that inventory is slow and, worse, systematically incomplete. The controls people miss are the ones hidden behind an interaction. A confirm-delete button inside a modal is simultaneously the hardest element to notice and one of the most important to cover.</p>
+        <p>At Cardbyte I was specifying test scenarios and then reviewing, debugging and modifying Selenium and TestNG scripts inside an existing Page Object Model framework. The inventory problem came up on every new page, so I built a tool for it.</p>
+      </div>
+    </section>
+
+    <section id="built" class="case-section" aria-labelledby="built-h">
+      <h2 id="built-h">What I built</h2>
+      <div class="prose">
+        <p>The tool drives a real browser, so it sees what a user sees, and it clicks its way into modals, tabs and menus so those controls end up in the report. It produces a workbook (or a CSV, for diffing two runs) with one row per element: where the crawl was rooted, how the element was reached (<code>page</code>, <code>modal: Add contact</code>, <code>tab: Billing</code>), how many interactions were needed, the tag and raw attributes, the best human-readable name (text, then <code>aria-label</code>, title, label, placeholder), an XPath anchored on a stable <code>id</code> where one exists, and type-aware suggested test cases. A summary sheet counts elements by tag, input type, context, depth and ARIA role, and reports the share of stable versus positional locators.</p>
+        <p>Configuration resolves from command-line flags, then <code>SCRAPER_*</code> environment variables, then a properties file, so a CI job can run it with no file on disk and credentials never in the repository. Distinct exit codes per failure class (configuration, authentication, navigation, report) let a pipeline tell why a run failed without parsing logs. A <code>--dry-run</code> validates everything and exits before touching a browser.</p>
+      </div>
+    </section>
+
+    <section id="decisions" class="case-section" aria-labelledby="decisions-h">
+      <h2 id="decisions-h">Engineering decisions</h2>
+      <figure class="figure">
+        <svg class="diagram diagram-crawl" viewBox="0 0 900 300" role="img" aria-labelledby="crawl-title crawl-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="crawl-title">The crawler searches a graph of UI states, not the DOM tree</title>
+<desc id="crawl-desc">A root node, the page as loaded, has three edges, each a click on a trigger: one opens a modal, one switches a tab, one opens a menu. Each of those child states contains controls that were not in the DOM before the click. A dashed edge from the modal back to the root shows the cycle a repeated click would create; the per-trigger visit set breaks it. A depth cap, a per-element identity set and a global element budget are listed as the other three termination bounds.</desc>
+<!-- root -->
+<rect class="box" x="30" y="112" width="170" height="76"/>
+<text class="lbl" x="115" y="142" text-anchor="middle">Page as loaded</text>
+<text class="sub" x="115" y="162" text-anchor="middle">depth 0</text>
+<!-- edges -->
+<path class="arrow" d="M200 132 C 260 132, 270 60, 330 60"/>
+<path class="arrow" d="M200 150 H330"/>
+<path class="arrow" d="M200 168 C 260 168, 270 240, 330 240"/>
+<text class="tag" x="262" y="48" text-anchor="middle">click "Add contact"</text>
+<text class="tag" x="265" y="140" text-anchor="middle">click "Billing"</text>
+<text class="tag" x="262" y="262" text-anchor="middle">click "More"</text>
+<!-- children -->
+<rect class="box box-accent" x="334" y="26" width="200" height="68"/>
+<text class="lbl" x="434" y="52" text-anchor="middle">modal: Add contact</text>
+<text class="sub" x="434" y="72" text-anchor="middle">inputs, select, save, cancel</text>
+<rect class="box box-accent" x="334" y="116" width="200" height="68"/>
+<text class="lbl" x="434" y="142" text-anchor="middle">tab: Billing</text>
+<text class="sub" x="434" y="162" text-anchor="middle">currency, email, update</text>
+<rect class="box box-accent" x="334" y="206" width="200" height="68"/>
+<text class="lbl" x="434" y="232" text-anchor="middle">menu: More</text>
+<text class="sub" x="434" y="252" text-anchor="middle">three menu items</text>
+<text class="tag" x="434" y="12" text-anchor="middle">depth 1: controls a flat scan never sees</text>
+<!-- cycle -->
+<path class="arrow-soft" d="M534 60 C 600 60, 600 120, 560 150 C 520 180, 300 200, 200 176"/>
+<text class="tag" x="640" y="120">a repeated trigger would loop;</text>
+<text class="tag" x="640" y="138">the per-trigger visit set stops it</text>
+<!-- bounds -->
+<rect class="box-soft" x="600" y="170" width="284" height="110"/>
+<text class="lbl" x="616" y="196">Four independent termination bounds</text>
+<text class="sub" x="616" y="218">1. depth cap        2. per-trigger visit set</text>
+<text class="sub" x="616" y="238">3. per-element identity set</text>
+<text class="sub" x="616" y="258">4. global element budget (hard stop)</text>
+</svg>
+        <figcaption class="caption"><span class="fignum">Fig. 1.</span> <span class="what">The crawler searches the graph of UI states, not the DOM tree: nodes are page states, edges are clicks. The states shown are the ones the demonstration run visited.</span></figcaption>
+      </figure>
+      <div class="prose">
+        <h3>Depth-first, because reaching a state is the expensive part</h3>
+        <p>Reaching a new UI state costs a click, a wait and an animation; exhausting the state once you are in it costs almost nothing. So it is worth recording everything inside a modal before opening the next one. Breadth-first would re-open the same containers repeatedly. Depth is also the single biggest lever on runtime, which is why it is the first thing the README tells you to tune.</p>
+        <h3>Termination on a graph that has no end</h3>
+        <p>The UI state graph is cyclic and effectively unbounded, so the crawl cannot finish by exhausting it. It finishes by four independent bounds: a depth cap; a per-trigger visit set, keyed on a stable generated identifier rather than a transient <code>WebElement</code> or DOM reference, which is the actual cycle-breaker; a per-element identity set that stops the same control being recorded twice; and a global element budget as a hard stop.</p>
+        <h3>Recovery depends on what the click did</h3>
+        <p>After each click the crawler classifies what happened. A modal, tab or menu is recursed into and then closed or restored. A navigation is undone with browser back. A new window is closed and focus restored. A page that changed in place is re-scanned and reset. A click that did nothing observable simply continues, with no reset, because resets are what make crawls slow. An <code>--always-reset</code> flag exists for applications where that optimism is wrong.</p>
+        <h3>Heuristics as pure functions</h3>
+        <p>Element naming, locator construction and test-case suggestion all operate on an immutable <code>ElementSnapshot</code> rather than on live browser objects. That is why the unit tests run in about a second with no browser and no network.</p>
+        <h3>Design mine, boilerplate assisted</h3>
+        <p>The crawl strategy, the state graph, the termination bounds and the recovery paths are my design and I can defend each choice. The Selenium boilerplate underneath was AI-assisted, which I say plainly because the résumé lists Java as familiar rather than expert.</p>
+      </div>
+    </section>
+
+    <section id="demo" class="case-section" aria-labelledby="demo-h">
+      <h2 id="demo-h">Demonstration</h2>
+      <div class="prose">
+        <p>The repository contains no screenshots, so for this page I built the smallest application that exercises the interesting paths (a sign-in form, then a contacts page with an add-contact modal, a People/Billing tab set and a More menu), served it locally, and ran the packaged jar against it headless at depth 1. The full workbook is downloadable below; these are twelve of its thirty rows, one or more from each context.</p>
+      </div>
+      <div class="tbl-scroll">
+        <table class="tbl tbl--inventory">
+          <caption>Rows from <code>ElementMap_20260922-000251.xlsx</code>, columns trimmed. Test-case text is the tool's own, cut after the first suggestion. <a href="../../assets/downloads/ElementMap_demo-contacts_depth1.xlsx" download>Download the workbook (XLSX, 8 KB)</a>.</caption>
+          <thead><tr><th scope="col">Context</th><th scope="col" class="num">Depth</th><th scope="col">Tag</th><th scope="col">Name</th><th scope="col">XPath</th><th scope="col">First suggested test</th></tr></thead>
+          <tbody>
+            <tr><td class="ctx">page</td><td class="num">0</td><td>input</td><td>Search contacts</td><td><code>//*[@id='contact-search']</code></td><td>Search a known term in "Search contacts" and verify the results</td></tr>
+            <tr><td class="ctx">page</td><td class="num">0</td><td>button</td><td>Add contact</td><td><code>//*[@id='add-contact']</code></td><td>Activate "Add contact" and verify the expected action occurs</td></tr>
+            <tr><td class="ctx">page</td><td class="num">0</td><td>button</td><td>Billing (tab)</td><td><code>//*[@id='tab-billing']</code></td><td>Activate "Billing" and verify the expected action occurs</td></tr>
+            <tr><td class="ctx">page</td><td class="num">0</td><td>button</td><td>Delete</td><td><code>//*[@id='delete-1']</code></td><td>Activate "Delete" and verify the expected action occurs</td></tr>
+            <tr><td class="ctx">modal: Add contact</td><td class="num">1</td><td>input</td><td>Work email</td><td><code>//*[@id='contact-email']</code></td><td>Enter a valid address in "Work email" and verify it is accepted</td></tr>
+            <tr><td class="ctx">modal: Add contact</td><td class="num">1</td><td>input</td><td>Phone</td><td><code>//*[@id='contact-phone']</code></td><td>Enter a valid phone number in "Phone" and verify acceptance</td></tr>
+            <tr><td class="ctx">modal: Add contact</td><td class="num">1</td><td>select</td><td>Team</td><td><code>//*[@id='contact-team']</code></td><td>Verify the select contains every expected option</td></tr>
+            <tr><td class="ctx">modal: Add contact</td><td class="num">1</td><td>input</td><td>Mark as VIP (checkbox)</td><td><code>//*[@id='contact-vip']</code></td><td>Verify the default state of "Mark as VIP"</td></tr>
+            <tr><td class="ctx">modal: Add contact</td><td class="num">1</td><td>button</td><td>Save contact</td><td><code>//*[@id='save-contact']</code></td><td>Activate "Save contact" and verify the expected action occurs</td></tr>
+            <tr><td class="ctx">tab: Billing</td><td class="num">1</td><td>select</td><td>Currency</td><td><code>//*[@id='currency']</code></td><td>Verify the select contains every expected option</td></tr>
+            <tr><td class="ctx">tab: Billing</td><td class="num">1</td><td>button</td><td>Update billing</td><td><code>//*[@id='update-billing']</code></td><td>Activate "Update billing" and verify the expected action occurs</td></tr>
+            <tr><td class="ctx">menu: More</td><td class="num">1</td><td>button</td><td>Merge duplicates (menuitem)</td><td><code>//*[@id='merge-dupes']</code></td><td>Activate "Merge duplicates" and verify the expected action occurs</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <details class="more">
+        <summary>Crawl log of the demonstration run</summary>
+        <div class="evidence">
+          <div class="evidence-head"><span><code>java -jar element-scraper.jar --base-url http://127.0.0.1:8765 --target-url …/contacts.html --max-depth 1 --headless</code></span><span>22 Sep 2026</span></div>
+          <pre tabindex="0">LoginService  Authenticated successfully
+DfsCrawler  Crawling http://127.0.0.1:8765/contacts.html (max depth 1, element budget 20000)
+DfsCrawler  page — recorded 10 of 12 elements at depth 0
+DfsCrawler  modal: Add contact — recorded 12 of 12 elements at depth 1
+DfsCrawler  tab: Billing — recorded 5 of 5 elements at depth 1
+DfsCrawler  menu: More — recorded 3 of 3 elements at depth 1
+DfsCrawler  Crawl finished:
+  elements recorded  : 30
+  elements captured  : 32 (before de-duplication and filtering)
+  contexts visited   : 4
+  deepest level      : 1
+  triggers activated : 9
+  triggers skipped   : 0 (already visited or no longer present)
+  errors recovered   : 0
+  elapsed            : 33s
+  click outcomes     :
+      did nothing observable: 5
+      navigated away: 1
+      opened a modal: 1
+      switched tab: 1
+      opened a menu or popover: 1
+ExcelReportWriter  Wrote 30 elements to ./out/ElementMap_20260922-000251.xlsx</pre>
+          <p class="caption">The five clicks that "did nothing observable" were the two navigation links' duplicates, the People tab (already selected), and the Edit and Delete buttons, which in the demo app have no handlers. The one that "navigated away" was the Settings link; the crawler went back and continued.</p>
+        </div>
+      </details>
+      <div class="prose">
+        <p>One honest wrinkle the run exposed: the name heuristic for a <code>&lt;select&gt;</code> without its own label text falls through to the visible option text, so the Team control was named "Engineering Sales" and Currency "USD INR EUR" in the raw workbook. The table above uses the label names; the downloadable workbook is unedited.</p>
+      </div>
+    </section>
+
+    <section id="validation" class="case-section" aria-labelledby="validation-h">
+      <h2 id="validation-h">Validation</h2>
+      <div class="prose">
+        <p>Two kinds. The unit suite, 217 tests, runs in about a second with no browser, because the crawler's heuristics are pure functions of an immutable element snapshot; <code>mvn verify</code> adds a coverage gate and packaging, and both run in CI on every push. The end-to-end check is a real crawl like the one above: the log states how many elements were captured before and after de-duplication, which triggers were activated or skipped, how many errors were recovered, and what each click did, so a run can be judged against what the page was known to contain.</p>
+      </div>
+    </section>
+
+    <section id="limits" class="case-section" aria-labelledby="limits-h">
+      <h2 id="limits-h">Limitations and status</h2>
+      <div class="prose">
+        <ul>
+          <li><strong>The crawler and inventory are complete.</strong> The companion test-execution layer, which would consume the inventory, locate and exercise each control and report pass or fail, was started with a senior engineer and is not finished. It is not part of the public tool and I do not claim it.</li>
+          <li>The login step expects a conventional email-and-password form; applications with SSO, MFA or CAPTCHA need the selector lists in <code>LoginService</code> extended or a pre-authenticated session.</li>
+          <li>The tool clicks every control it finds, including destructive ones. It should run only against systems you own or have written permission to test, and preferably against staging. The repository's <code>SECURITY.md</code> spells this out.</li>
+          <li>Runtime grows steeply with depth; depth 2 is tens of minutes on a typical application and depth 3 can be hours.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="links" class="case-section" aria-labelledby="links-h">
+      <h2 id="links-h">Repository and related work</h2>
+      <ul class="related" role="list">
+        <li><a href="https://github.com/PaarthPatodia/ui-element-scraper"><span class="kind">Repository</span><span class="name">ui-element-scraper on GitHub</span></a></li>
+        <li><a href="https://github.com/PaarthPatodia/ui-element-scraper/blob/main/docs/DESIGN_DECISIONS.md"><span class="kind">Documentation</span><span class="name">Design decisions: the reasoning behind each choice, and what was rejected</span></a></li>
+        <li><a href="../../assets/downloads/ElementMap_demo-contacts_depth1.xlsx" download><span class="kind">Download</span><span class="name">Demonstration workbook (XLSX, 8 KB)</span></a></li>
+        <li><a href="../../#experience"><span class="kind">Experience</span><span class="name">Cardbyte, July to August 2025</span></a></li>
+      </ul>
+    </section>
+
+  </div>
+</div>
+
+</main>
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-col">
+      <p class="footer-name">Paarth Patodia</p>
+      <p class="footer-line">B.S. Electrical Engineering, UMass Amherst, expected May 2028. Seeking a Summer 2027 engineering internship.</p>
+    </div>
+    <ul class="footer-links" role="list">
+      <li><a href="mailto:paarth.patodia@gmail.com">paarth.patodia@gmail.com</a></li>
+      <li><a href="https://github.com/PaarthPatodia" rel="me">github.com/PaarthPatodia</a></li>
+      <li><a href="../../assets/Paarth_Patodia_Resume.pdf" download>Résumé (PDF)</a></li>
+    </ul>
+    <p class="footer-note">Every claim on this site comes from my CV and the two public repositories. Battery figures are outputs of the open-source toolkit on a synthetic cell, not measurements of a real cell. Static HTML, no analytics, no trackers.</p>
+  </div>
+</footer>
+<script src="../../js/site.js" defer></script>
+
+</body>
+</html>

@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Battery Characterization Suite, a case study by Paarth Patodia</title>
+<meta name="description" content="Four Python tools that extract battery-model parameters from lithium-ion cycler data: DOE parsing, DCIR, SOC/OCV/hysteresis and 1RC to 5RC Thevenin equivalent-circuit estimation, validated against a synthetic cell with known ground truth.">
+<meta name="author" content="Paarth Patodia">
+<meta name="theme-color" content="#F4F4F1">
+<meta name="color-scheme" content="light">
+<link rel="canonical" href="https://paarthpatodia.github.io/work/battery-characterization-suite/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Paarth Patodia">
+<meta property="og:title" content="Battery Characterization Suite">
+<meta property="og:description" content="Four Python tools that extract battery-model parameters from lithium-ion cycler data: DOE parsing, DCIR, SOC/OCV/hysteresis and 1RC to 5RC Thevenin equivalent-circuit estimation, validated against a synthetic cell with known ground truth.">
+<meta property="og:url" content="https://paarthpatodia.github.io/work/battery-characterization-suite/">
+<meta property="og:image" content="https://paarthpatodia.github.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Paarth Patodia, electrical engineering student at UMass Amherst: battery analysis tools and embedded systems.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23F4F4F1'/%3E%3Cpath d='M4 11h5l2 12 4-7 5-3 6-1' fill='none' stroke='%2317191D' stroke-width='2.2' stroke-linejoin='round' stroke-linecap='round'/%3E%3Ccircle cx='26' cy='12' r='3.4' fill='%230B6E55'/%3E%3C/svg%3E">
+<link rel="preload" href="../../assets/fonts/bricolage-grotesque-200-800-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../assets/fonts/ibm-plex-mono-400-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/site.css">
+<script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#B9BDB6" stroke-width="1"/>
+    </pattern>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0.5 L9.5 5 L0 9.5 z" fill="#17191D"/>
+    </marker>
+    <marker id="arrowhead-soft" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0.5 L9.5 5 L0 9.5 z" fill="#6B727A"/>
+    </marker>
+  </defs>
+</svg>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../../" aria-label="Paarth Patodia, home">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="26" height="26" aria-hidden="true" focusable="false"><path d="M3 11h5l2 12 4-7 5-3 7-1" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="27" cy="12" r="3.4" fill="#0B6E55"/></svg>
+      <span>Paarth Patodia</span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu" hidden>
+      <span class="menu-toggle-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="menu-toggle-label">Menu</span>
+    </button>
+    <nav id="site-menu" class="menu" aria-label="Site">
+      <ul class="menu-list" role="list">
+        <li><a href="../../#work" aria-current="page">Work</a></li>
+        <li><a href="../../#experience">Experience</a></li>
+        <li><a href="../../#about">About</a></li>
+        <li><a href="../../#contact">Contact</a></li>
+      </ul>
+      <a class="btn btn-primary btn-small menu-resume" href="../../assets/Paarth_Patodia_Resume.pdf" download>Résumé (PDF)</a>
+    </nav>
+  </div>
+</header>
+
+
+<main id="main">
+
+<header class="case-head container">
+  <ol class="crumbs" role="list"><li><a href="../../">Home</a></li><li><a href="../../#work">Work</a></li><li>Battery Characterization Suite</li></ol>
+  <h1>Battery Characterization Suite</h1>
+  <p class="standfirst">Four Python tools that take a lithium-ion cell from a test plan on a spreadsheet to the parameters a battery management system's model needs, with every analysis checked against a simulated cell whose true values are known.</p>
+  <dl class="case-meta">
+    <div><dt>Role</dt><dd>Sole author of the toolkit. The analysis it generalises was written by me during the Maruti Suzuki internship (Summer 2026).</dd></div>
+    <div><dt>Dates</dt><dd>Summer 2026, internship analysis; generalised and published in 2026.</dd></div>
+    <div><dt>Stack</dt><dd>Python 3.11+, NumPy, pandas, SciPy, Matplotlib, Plotly, Streamlit, openpyxl, pytest</dd></div>
+    <div><dt>Repository</dt><dd><a href="https://github.com/PaarthPatodia/battery-ecm-toolkit">github.com/PaarthPatodia/battery-ecm-toolkit</a>, MIT licence</dd></div>
+  </dl>
+  <div class="case-actions">
+    <a class="btn btn-primary btn-small" href="https://github.com/PaarthPatodia/battery-ecm-toolkit">Repository on GitHub</a>
+    <a class="btn btn-secondary btn-small" href="https://github.com/PaarthPatodia/battery-ecm-toolkit/blob/main/examples/README.md">Worked examples with output</a>
+    <a class="btn btn-secondary btn-small" href="https://github.com/PaarthPatodia/battery-ecm-toolkit/blob/main/docs/theory/README.md">Engineering theory</a>
+  </div>
+</header>
+
+<div class="container">
+  <section class="key-result" aria-labelledby="kr-h">
+    <h2 id="kr-h">Key result</h2>
+    <div class="kr-text">
+      <p>The hysteresis tool sees only what a cycler exports (time, current, voltage, temperature) and recovers the simulated cell's state of charge, open-circuit voltage and hysteresis to within the errors on the right. Hysteresis on this cell is 13 to 24 mV, so a worst case of 0.53 mV is a few percent of the quantity being measured.</p>
+      <p>These numbers are for a synthetic cell with known ground truth. They show the analysis is correct; they do not predict its accuracy on a real cell, which will be worse and can only be measured by running it on real data.</p>
+    </div>
+    <div class="kr-table tbl-scroll">
+      <table class="tbl tbl--dense">
+        <caption>Recovery error, analysis minus truth, on the simulated HML dataset. Reproduced on 22 September 2026 by running <code>scripts/validate_hml_against_truth.py</code> from a clean clone.</caption>
+        <thead><tr><th scope="col">Recovered quantity</th><th scope="col" class="num">Samples</th><th scope="col" class="num">Max error</th><th scope="col" class="num">RMS error</th></tr></thead>
+        <tbody>
+          <tr><td>State of charge</td><td class="num">56,226</td><td class="num">0.020 %SOC</td><td class="num">0.013 %SOC</td></tr>
+          <tr><td>Open-circuit voltage</td><td class="num">66 rests</td><td class="num">0.899 mV</td><td class="num">0.264 mV</td></tr>
+          <tr><td>Hysteresis</td><td class="num">24 pulse pairs</td><td class="num">0.529 mV</td><td class="num">0.306 mV</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div class="container case-body">
+  <nav class="case-toc" aria-label="On this page">
+    <h2>On this page</h2>
+    <ol role="list">
+      <li><a href="#context">Context and role</a></li>
+      <li><a href="#problem">Problem and constraints</a></li>
+      <li><a href="#built">What I built</a></li>
+      <li><a href="#decisions">Engineering decisions</a></li>
+      <li><a href="#demo">Demonstration</a></li>
+      <li><a href="#validation">Validation and results</a></li>
+      <li><a href="#limits">Limitations and next steps</a></li>
+      <li><a href="#links">Repository and related work</a></li>
+    </ol>
+  </nav>
+
+  <div class="case-main">
+
+    <section id="context" class="case-section" aria-labelledby="context-h">
+      <h2 id="context-h">Context and role</h2>
+      <div class="prose">
+        <p>In Summer 2026 I was an electrical engineering intern in the battery research group at Maruti Suzuki, in India. The group was characterising lithium-ion (LFP) cells from two suppliers, three cells each, to support cell selection for an EV battery. I wrote the Python that automated the analysis of those DCIR, HPPC and capacity tests: processing more than 100,000 pulse events, producing 30+ engineering comparison plots for supplier benchmarking, and fitting 1RC and 2RC equivalent-circuit models to the experimental data to correlate simulated against measured voltage response.</p>
+        <p>None of that experimental data can be published. What is public is this toolkit: the same analysis, generalised, stripped of anything supplier-specific, and validated against a synthetic cell simulator instead. Maruti Suzuki granted permission to publish it on my GitHub. I am its sole author.</p>
+      </div>
+      <p class="callout"><strong>Two things to keep apart.</strong> The internship work analysed measured cells; its results are confidential. Every figure and number on this page comes from the public toolkit running on a simulated cell with known ground truth.</p>
+    </section>
+
+    <section id="problem" class="case-section" aria-labelledby="problem-h">
+      <h2 id="problem-h">Problem and constraints</h2>
+      <div class="prose">
+        <p>A battery management system predicts cell voltage, state of charge and available power from a model. A Thevenin equivalent circuit needs an open-circuit voltage curve <span class="sans">OCV(z)</span>, a series resistance <span class="sans">R<sub>0</sub></span>, one or more RC pairs (<span class="sans">R<sub>i</sub></span>, <span class="sans">τ<sub>i</sub></span>) and a hysteresis term. Those values come from bench tests on real cells, and most of the engineering effort is in getting them out of the raw data honestly.</p>
+        <p>The test itself arrives as a design-of-experiments spreadsheet written for people, not parsers: headings differ between suppliers, cut-off criteria are free text, steps repeat by reference, and cells are merged down whole blocks. Misreading one repeat in an 86-hour test costs three and a half days of channel time.</p>
+        <p>On the measurement side, the hazards are quiet. Sign, unit and capacity errors never crash anything; they produce a plausible chart with the wrong answer. So does an open-circuit voltage read before the cell has finished relaxing. And the quantities of interest are small: hysteresis is 5 to 30 mV sitting under an <span class="sans">I·R</span> overpotential three to six times larger, so measuring it in the wrong place returns the overpotential instead.</p>
+      </div>
+    </section>
+
+    <section id="built" class="case-section" aria-labelledby="built-h">
+      <h2 id="built-h">What I built</h2>
+      <div class="prose">
+        <p>Four tools. Each runs on its own from the command line, and the first hosts the other three in a Streamlit hub.</p>
+      </div>
+      <div class="tool-grid">
+        <div class="tool">
+          <h3>doe_visualizer</h3>
+          <p>Parses a DOE spreadsheet into the current-versus-time waveform the cycler will run, so a test can be checked before a cell goes on a channel. Hosts the Analysis, Modeling and Estimation tabs.</p>
+          <p class="role-line">Input: the test plan (.xlsx). Output: the waveform, step table and validation report.</p>
+        </div>
+        <div class="tool">
+          <h3>dcir_analysis</h3>
+          <p>Averages per-cell DCIR sweeps, splits charge from discharge, holds three factors and sweeps the fourth, cross-checks every row against Ohm's law, and writes a plain-language sensitivity report.</p>
+          <p class="role-line">Input: supplier DCIR workbooks. Output: six figures and the report.</p>
+        </div>
+        <div class="tool">
+          <h3>hml_analysis</h3>
+          <p>Coulomb-counted state of charge, open-circuit voltage at every relaxation, and the charge/discharge hysteresis loop per SOC. Ships the cell simulator the whole suite is validated against.</p>
+          <p class="role-line">Input: a cycler export. Output: OCV curves, hysteresis tables and minor-loop figures.</p>
+        </div>
+        <div class="tool">
+          <h3>parameter_estimation</h3>
+          <p>Segments arbitrary pulse data, then fits a shared 1RC to 5RC Thevenin model across all pulse windows by bounded nonlinear least squares, with hold-out scoring and per-parameter standard errors.</p>
+          <p class="role-line">Input: current and voltage traces. Output: R<sub>0</sub>, R<sub>i</sub>, τ<sub>i</sub>, their uncertainties, and a fit report.</p>
+        </div>
+      </div>
+      <div class="prose">
+        <p>Who uses the outputs: a test engineer checks the waveform before committing a channel; a cell or BMS engineer takes the OCV curve, hysteresis and RC parameters into a cell model; and the Ohm's-law and sensitivity reports go to whoever has to decide whether a supplier's numbers are internally consistent.</p>
+      </div>
+      <figure class="figure">
+        <svg class="fig fig-ladder" viewBox="0 0 560 216" role="img" aria-labelledby="ladder-title ladder-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="ladder-title">Second-order Thevenin equivalent circuit model</title>
+<desc id="ladder-desc">An open-circuit voltage source in series with a resistor R0 and two parallel resistor-capacitor pairs, R1 with C1 and R2 with C2, between the terminals.</desc>
+<circle class="wire" cx="60" cy="70" r="22"/>
+<path class="wire" d="M56 61 h8 M60 57 v8 M56 79 h8"/>
+<text class="lab" x="60" y="122" text-anchor="middle">OCV(z)</text>
+<path class="wire" d="M82 70 H120"/>
+<rect class="wire" x="120" y="58" width="56" height="24"/>
+<text class="lab" x="148" y="48" text-anchor="middle">R0</text>
+<path class="wire" d="M176 70 H214"/>
+<path class="wire" d="M214 70 v-34 H246 M302 36 H334 v34 M214 70 v34 H268 M280 104 H334 v-34"/>
+<rect class="wire" x="246" y="24" width="56" height="24"/>
+<text class="lab" x="274" y="16" text-anchor="middle">R1</text>
+<path class="wire" d="M268 90 v28 M280 90 v28"/>
+<text class="lab" x="274" y="136" text-anchor="middle">C1</text>
+<path class="wire" d="M334 70 H364"/>
+<path class="wire" d="M364 70 v-34 H396 M452 36 H484 v34 M364 70 v34 H418 M430 104 H484 v-34"/>
+<rect class="wire" x="396" y="24" width="56" height="24"/>
+<text class="lab" x="424" y="16" text-anchor="middle">R2</text>
+<path class="wire" d="M418 90 v28 M430 90 v28"/>
+<text class="lab" x="424" y="136" text-anchor="middle">C2</text>
+<path class="wire" d="M484 70 H520"/>
+<circle class="node" cx="524" cy="70" r="4"/>
+<text class="lab" x="524" y="56" text-anchor="middle">+</text>
+<path class="wire" d="M60 92 V170 H524 V74"/>
+<circle class="node" cx="524" cy="170" r="4"/>
+<text class="lab" x="524" y="198" text-anchor="middle">&#8722;</text>
+</svg>
+        <figcaption class="caption"><span class="fignum">Fig. 1.</span> <span class="what">What the estimator fits: a Thevenin equivalent circuit, drawn here as the 2RC case. OCV(z) is the open-circuit voltage as a function of state of charge z; each RC pair has a time constant τ = R·C.</span></figcaption>
+      </figure>
+    </section>
+
+    <section id="decisions" class="case-section" aria-labelledby="decisions-h">
+      <h2 id="decisions-h">Engineering decisions and tradeoffs</h2>
+      <div class="prose">
+        <h3>One shared fit across all pulse windows</h3>
+        <p>The estimator does not fit each pulse separately and average. It fits one parameter set to every pulse window at once with <code>scipy.optimize.least_squares</code> (trust-region reflective, bounded, sparse Jacobian). One set of parameters has to explain every pulse, which is what a BMS model has to do too, and the per-parameter standard errors come from a single well-posed problem. The cost is that a data region the model cannot describe pulls the whole fit; hold-out scoring on withheld windows is there to catch that.</p>
+        <h3>RC branches as a zero-order-hold recurrence</h3>
+        <p>Each RC branch is integrated as a discrete first-order filter, <span class="sans">v<sub>i</sub>[k+1] = a<sub>i</sub> v<sub>i</sub>[k] + R<sub>i</sub>(1 − a<sub>i</sub>) I[k]</span> with <span class="sans">a<sub>i</sub> = exp(−Δt/τ<sub>i</sub>)</span>, evaluated with <code>scipy.signal.lfilter</code>. It is exact for piecewise-constant current, which cycler data is, and fast enough to sit inside the optimiser's inner loop.</p>
+        <h3>Segmentation from the signal, not from row numbers</h3>
+        <p>Which segment is a pulse, which is an SOC transition, and where each rest ends are all detected from the current trace, because hard-coded row numbers break on the next file. The current-sign convention is detected from the data as well: the first long non-zero segment must be the reference charge, and getting it wrong would run every SOC backwards.</p>
+        <h3>Two backends that cannot share a process</h3>
+        <p><code>hml_analysis</code> keeps a <code>utils.py</code> at its root and <code>dcir_analysis</code> has a <code>utils/</code> package. Put both on one <code>sys.path</code> and <code>import utils</code> silently resolves to whichever loaded first. Rather than rename my way out, the hub launches each as a subprocess with its own working directory, and they return results as a versioned bundle of CSV files plus a manifest. Integration tests launch the real backends and feed their output through the consuming code, so a renamed column on either side fails in CI instead of in the app. <code>battery_ecm</code> is the exception: it is a proper package that claims one top-level name, and a test asserts that only <code>analysis/ecm.py</code> may import it.</p>
+        <h3>A DOE parser that reads spreadsheets written for people</h3>
+        <p>Header detection rather than fixed columns, a step vocabulary, a small grammar for free-text cut-off criteria, and resolution of repeat-by-reference and merged cells. The waveform simulator's voltage model is deliberately crude: it only has to decide when a step terminates. Predicting voltage is the equivalent circuit's job.</p>
+      </div>
+    </section>
+
+    <section id="demo" class="case-section" aria-labelledby="demo-h">
+      <h2 id="demo-h">Demonstration</h2>
+      <div class="prose">
+        <p>Everything below was produced on 22 September 2026 by cloning the public repository, running <code>scripts/generate_sample_data.py</code> and then the tools, on the synthetic data that script writes.</p>
+      </div>
+      <figure class="figure">
+        <img src="../../assets/figures/streamlit-hub-hml.png" width="1440" height="900" loading="lazy" decoding="async" alt="The toolkit's Streamlit hub with the HML sample procedure loaded. A sidebar holds the DOE source, cell capacity and starting SOC controls. The main pane shows summary figures (50 h duration, 78 steps executed, 38 unique steps, 115 Ah discharged) above two stacked plots: current against time, with repeated pulse blocks marked times three, and state of charge stepping down from 100 percent to about 50 percent in six intervals.">
+        <figcaption class="caption"><span class="fignum">Fig. 2.</span> <span class="what">The Streamlit hub with the HML sample procedure loaded: the DOE parsed into a current waveform and the resulting state-of-charge staircase.</span> <span class="conditions">Screenshot of the actual interface running locally on the generated sample data.</span></figcaption>
+      </figure>
+      <figure class="figure">
+        <svg class="fig fig-ecm" viewBox="0 0 960 340" role="img" aria-labelledby="ecm-title ecm-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="ecm-title">Terminal voltage, active current segments and end-of-rest OCV points</title>
+<desc id="ecm-desc">A terminal-voltage trace over about 57 seconds. Three shaded negative-current segments and one positive-current segment pull the voltage down and up; after each, the voltage relaxes toward an open-circuit value, marked with a dot at the end of each rest. Output of the Battery Characterization Suite on a synthetic cell.</desc>
+<rect class="seg seg-negative" x="121.59" y="16" width="73.88" height="266"/>
+<rect class="seg seg-positive" fill="url(#hatch)" x="395.51" y="16" width="51.72" height="266"/>
+<rect class="seg seg-negative" x="610.32" y="16" width="35.89" height="266"/>
+<rect class="seg seg-negative" x="669.97" y="16" width="29.54" height="266"/>
+<line class="grid" x1="76.82" y1="16" x2="76.82" y2="282"/>
+<line class="grid" x1="225.06" y1="16" x2="225.06" y2="282"/>
+<line class="grid" x1="373.29" y1="16" x2="373.29" y2="282"/>
+<line class="grid" x1="521.53" y1="16" x2="521.53" y2="282"/>
+<line class="grid" x1="669.76" y1="16" x2="669.76" y2="282"/>
+<line class="grid" x1="818" y1="16" x2="818" y2="282"/>
+<line class="grid" x1="62" y1="269.33" x2="944" y2="269.33"/>
+<line class="grid" x1="62" y1="237.67" x2="944" y2="237.67"/>
+<line class="grid" x1="62" y1="206" x2="944" y2="206"/>
+<line class="grid" x1="62" y1="174.33" x2="944" y2="174.33"/>
+<line class="grid" x1="62" y1="142.67" x2="944" y2="142.67"/>
+<line class="grid" x1="62" y1="111" x2="944" y2="111"/>
+<line class="grid" x1="62" y1="79.33" x2="944" y2="79.33"/>
+<line class="grid" x1="62" y1="47.67" x2="944" y2="47.67"/>
+<line class="grid" x1="62" y1="16" x2="944" y2="16"/>
+<path class="axis" d="M62 16 V282 H944"/>
+<text class="tick" x="76.82" y="300" text-anchor="middle">0</text>
+<text class="tick" x="225.06" y="300" text-anchor="middle">10</text>
+<text class="tick" x="373.29" y="300" text-anchor="middle">20</text>
+<text class="tick" x="521.53" y="300" text-anchor="middle">30</text>
+<text class="tick" x="669.76" y="300" text-anchor="middle">40</text>
+<text class="tick" x="818" y="300" text-anchor="middle">50</text>
+<text class="tick" x="54" y="272.83" text-anchor="end">3.575</text>
+<text class="tick" x="54" y="241.17" text-anchor="end">3.600</text>
+<text class="tick" x="54" y="209.5" text-anchor="end">3.625</text>
+<text class="tick" x="54" y="177.83" text-anchor="end">3.650</text>
+<text class="tick" x="54" y="146.17" text-anchor="end">3.675</text>
+<text class="tick" x="54" y="114.5" text-anchor="end">3.700</text>
+<text class="tick" x="54" y="82.83" text-anchor="end">3.725</text>
+<text class="tick" x="54" y="51.17" text-anchor="end">3.750</text>
+<text class="tick" x="54" y="19.5" text-anchor="end">3.775</text>
+<text class="axlabel" x="503" y="334" text-anchor="middle">Time (s)</text>
+<text class="axlabel" transform="translate(12 149) rotate(-90)" text-anchor="middle">Voltage (V)</text>
+<path class="series trace" pathLength="1" d="M76.99 96.05 L91.77 96.05 L106.54 94.66 L107.6 94.91 L109.18 101.25 L120.79 172.94 L121.84 177.12 L122.38 177.63 L126.07 179.91 L140.33 190.42 L153.52 198.78 L169.89 203.72 L194.69 209.67 L195.74 208.79 L196.27 207.39 L210.52 161.79 L212.1 159.89 L212.64 159.89 L220.55 152.67 L226.35 148.24 L231.63 143.17 L254.32 127.72 L255.91 127.09 L298.66 114.93 L338.77 108.21 L347.75 102.64 L396.83 45.39 L407.39 37.66 L428.5 29.93 L446.97 25.12 L448.55 27.65 L463.33 65.78 L463.87 66.79 L466.5 68.82 L480.75 77.69 L486.03 81.61 L490.25 83.77 L521.91 93.52 L560.44 99.85 L570.48 105.43 L572.58 107.07 L611.12 144.31 L625.37 151.53 L645.96 156.85 L669.71 249.32 L671.81 252.11 L685.54 263.76 L699.26 271.61 L723.53 205.11 L740.95 179.65 L744.65 174.84 L771.57 157.61 L785.28 148.24 L787.92 146.59 L791.1 145.45 L848.09 127.34 L916.71 116.83"/>
+<circle class="marker ocv" style="--i:1" cx="344.05" cy="107.33" r="5"/>
+<circle class="marker ocv" style="--i:2" cx="566.25" cy="101.25" r="5"/>
+<circle class="marker ocv" style="--i:3" cx="921.99" cy="116.32" r="5"/>
+</svg>
+        <figcaption class="caption"><span class="fignum">Fig. 3.</span> <span class="what">Terminal voltage segmented by the estimator into discharge pulses (shaded), a charge pulse (hatched) and rests, with the open-circuit voltage read at the end of each rest (dots).</span> <span class="conditions">Synthetic cell, <code>parameter_estimation</code> output, redrawn from the repository figure; <a href="../../assets/figures/ecm_segmentation.png">original PNG</a>.</span></figcaption>
+      </figure>
+      <figure class="figure">
+        <svg class="fig fig-ocv fig-ocv--wide" viewBox="0 0 1200 520" role="img" aria-labelledby="ocv-wide-title ocv-wide-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="ocv-wide-title">Open-circuit voltage against state of charge on the charge and discharge branches</title>
+<desc id="ocv-wide-desc">Two rising curves from about 3.08 volts at 5 percent state of charge to 4.0 volts at 75 percent. The charge branch sits a few tens of millivolts above the discharge branch throughout; the gap between them is the voltage hysteresis. Two separate measured ranges, roughly 5 to 35 percent and 45 to 75 percent. Output of the Battery Characterization Suite on a synthetic cell.</desc>
+<line class="grid" x1="186.42" y1="16" x2="186.42" y2="462"/>
+<line class="grid" x1="331.95" y1="16" x2="331.95" y2="462"/>
+<line class="grid" x1="477.47" y1="16" x2="477.47" y2="462"/>
+<line class="grid" x1="623" y1="16" x2="623" y2="462"/>
+<line class="grid" x1="768.53" y1="16" x2="768.53" y2="462"/>
+<line class="grid" x1="914.05" y1="16" x2="914.05" y2="462"/>
+<line class="grid" x1="1059.58" y1="16" x2="1059.58" y2="462"/>
+<line class="grid" x1="70" y1="390.64" x2="1176" y2="390.64"/>
+<line class="grid" x1="70" y1="301.44" x2="1176" y2="301.44"/>
+<line class="grid" x1="70" y1="212.24" x2="1176" y2="212.24"/>
+<line class="grid" x1="70" y1="123.04" x2="1176" y2="123.04"/>
+<line class="grid" x1="70" y1="33.84" x2="1176" y2="33.84"/>
+<path class="axis" d="M70 16 V462 H1176"/>
+<text class="tick" x="186.42" y="480" text-anchor="middle">10</text>
+<text class="tick" x="331.95" y="480" text-anchor="middle">20</text>
+<text class="tick" x="477.47" y="480" text-anchor="middle">30</text>
+<text class="tick" x="623" y="480" text-anchor="middle">40</text>
+<text class="tick" x="768.53" y="480" text-anchor="middle">50</text>
+<text class="tick" x="914.05" y="480" text-anchor="middle">60</text>
+<text class="tick" x="1059.58" y="480" text-anchor="middle">70</text>
+<text class="tick" x="62" y="394.14" text-anchor="end">3.2</text>
+<text class="tick" x="62" y="304.94" text-anchor="end">3.4</text>
+<text class="tick" x="62" y="215.74" text-anchor="end">3.6</text>
+<text class="tick" x="62" y="126.54" text-anchor="end">3.8</text>
+<text class="tick" x="62" y="37.34" text-anchor="end">4.0</text>
+<text class="axlabel" x="623" y="514" text-anchor="middle">State of charge (%)</text>
+<text class="axlabel" transform="translate(12 239) rotate(-90)" text-anchor="middle">Open-circuit voltage (V)</text>
+<path class="series charge" pathLength="1" d="M201.31 400.76 L244.62 379.76 L288.45 356.97 L303.06 350.05 L317.15 344.08 L346.37 330.88 L360.98 324.59 L375.59 319.19 L404.29 308.67 L418.9 303.58 L462.73 289.17 L476.82 284.36 L549.87 260.36"/>
+<path class="series charge" pathLength="1" d="M783.12 166.75 L826.43 147.57 L870.26 127.14 L884.35 120.85 L898.96 114.57 L928.18 102.57 L942.79 96.55 L957.4 91.15 L986.63 80.05 L1001.24 74.65 L1044.55 60.24 L1059.16 55.43 L1131.69 33.84"/>
+<path class="series discharge" pathLength="1" d="M113.64 443.4 L186.7 414.59 L201.31 407.99 L244.62 386.36 L259.23 379.18 L288.45 364.77 L303.06 358.17 L317.67 351.26 L346.37 338.37 L360.98 333.55 L375.07 327.26 L419.42 311.97 L462.73 298.45"/>
+<path class="series discharge" pathLength="1" d="M695.98 215.36 L768.51 183.25 L783.12 176.65 L826.96 156.85 L841.57 150.25 L870.26 137.36 L884.87 131.07 L899.49 124.47 L928.71 111.85 L943.3 106.76 L957.91 101.05 L1001.75 83.66 L1044.55 69.56"/>
+<path class="marker charge" style="--i:1" d="M201.31 394.99 L196.31 403.65 L206.31 403.65 Z"/>
+<path class="marker charge" style="--i:2" d="M244.62 373.98 L239.62 382.64 L249.62 382.64 Z"/>
+<path class="marker charge" style="--i:3" d="M288.45 351.19 L283.45 359.85 L293.45 359.85 Z"/>
+<path class="marker charge" style="--i:4" d="M303.06 344.28 L298.06 352.94 L308.06 352.94 Z"/>
+<path class="marker charge" style="--i:5" d="M317.15 338.3 L312.15 346.96 L322.15 346.96 Z"/>
+<path class="marker charge" style="--i:6" d="M346.37 325.1 L341.37 333.76 L351.37 333.76 Z"/>
+<path class="marker charge" style="--i:7" d="M360.98 318.81 L355.98 327.47 L365.98 327.47 Z"/>
+<path class="marker charge" style="--i:8" d="M375.59 313.42 L370.59 322.08 L380.59 322.08 Z"/>
+<path class="marker charge" style="--i:9" d="M404.29 302.89 L399.29 311.55 L409.29 311.55 Z"/>
+<path class="marker charge" style="--i:10" d="M418.9 297.81 L413.9 306.47 L423.9 306.47 Z"/>
+<path class="marker charge" style="--i:11" d="M462.73 283.4 L457.73 292.06 L467.73 292.06 Z"/>
+<path class="marker charge" style="--i:12" d="M476.82 278.58 L471.82 287.24 L481.82 287.24 Z"/>
+<path class="marker charge" style="--i:13" d="M549.87 254.59 L544.87 263.25 L554.87 263.25 Z"/>
+<path class="marker charge" style="--i:14" d="M783.12 160.97 L778.12 169.63 L788.12 169.63 Z"/>
+<path class="marker charge" style="--i:15" d="M826.43 141.8 L821.43 150.46 L831.43 150.46 Z"/>
+<path class="marker charge" style="--i:16" d="M870.26 121.37 L865.26 130.03 L875.26 130.03 Z"/>
+<path class="marker charge" style="--i:17" d="M884.35 115.08 L879.35 123.74 L889.35 123.74 Z"/>
+<path class="marker charge" style="--i:18" d="M898.96 108.79 L893.96 117.45 L903.96 117.45 Z"/>
+<path class="marker charge" style="--i:19" d="M928.18 96.8 L923.18 105.46 L933.18 105.46 Z"/>
+<path class="marker charge" style="--i:20" d="M942.79 90.77 L937.79 99.43 L947.79 99.43 Z"/>
+<path class="marker charge" style="--i:21" d="M957.4 85.38 L952.4 94.04 L962.4 94.04 Z"/>
+<path class="marker charge" style="--i:22" d="M986.63 74.27 L981.63 82.93 L991.63 82.93 Z"/>
+<path class="marker charge" style="--i:23" d="M1001.24 68.88 L996.24 77.54 L1006.24 77.54 Z"/>
+<path class="marker charge" style="--i:24" d="M1044.55 54.47 L1039.55 63.13 L1049.55 63.13 Z"/>
+<path class="marker charge" style="--i:25" d="M1059.16 49.65 L1054.16 58.31 L1064.16 58.31 Z"/>
+<path class="marker charge" style="--i:26" d="M1131.69 28.07 L1126.69 36.73 L1136.69 36.73 Z"/>
+<path class="marker discharge" style="--i:27" d="M113.64 449.18 L108.64 440.52 L118.64 440.52 Z"/>
+<path class="marker discharge" style="--i:28" d="M186.7 420.36 L181.7 411.7 L191.7 411.7 Z"/>
+<path class="marker discharge" style="--i:29" d="M201.31 413.76 L196.31 405.1 L206.31 405.1 Z"/>
+<path class="marker discharge" style="--i:30" d="M244.62 392.13 L239.62 383.47 L249.62 383.47 Z"/>
+<path class="marker discharge" style="--i:31" d="M259.23 384.95 L254.23 376.29 L264.23 376.29 Z"/>
+<path class="marker discharge" style="--i:32" d="M288.45 370.55 L283.45 361.89 L293.45 361.89 Z"/>
+<path class="marker discharge" style="--i:33" d="M303.06 363.94 L298.06 355.28 L308.06 355.28 Z"/>
+<path class="marker discharge" style="--i:34" d="M317.67 357.03 L312.67 348.37 L322.67 348.37 Z"/>
+<path class="marker discharge" style="--i:35" d="M346.37 344.14 L341.37 335.48 L351.37 335.48 Z"/>
+<path class="marker discharge" style="--i:36" d="M360.98 339.33 L355.98 330.67 L365.98 330.67 Z"/>
+<path class="marker discharge" style="--i:37" d="M375.07 333.04 L370.07 324.38 L380.07 324.38 Z"/>
+<path class="marker discharge" style="--i:38" d="M419.42 317.74 L414.42 309.08 L424.42 309.08 Z"/>
+<path class="marker discharge" style="--i:39" d="M462.73 304.23 L457.73 295.57 L467.73 295.57 Z"/>
+<path class="marker discharge" style="--i:40" d="M695.98 221.14 L690.98 212.48 L700.98 212.48 Z"/>
+<path class="marker discharge" style="--i:41" d="M768.51 189.02 L763.51 180.36 L773.51 180.36 Z"/>
+<path class="marker discharge" style="--i:42" d="M783.12 182.42 L778.12 173.76 L788.12 173.76 Z"/>
+<path class="marker discharge" style="--i:43" d="M826.96 162.62 L821.96 153.96 L831.96 153.96 Z"/>
+<path class="marker discharge" style="--i:44" d="M841.57 156.02 L836.57 147.36 L846.57 147.36 Z"/>
+<path class="marker discharge" style="--i:45" d="M870.26 143.13 L865.26 134.47 L875.26 134.47 Z"/>
+<path class="marker discharge" style="--i:46" d="M884.87 136.84 L879.87 128.18 L889.87 128.18 Z"/>
+<path class="marker discharge" style="--i:47" d="M899.49 130.24 L894.49 121.58 L904.49 121.58 Z"/>
+<path class="marker discharge" style="--i:48" d="M928.71 117.62 L923.71 108.96 L933.71 108.96 Z"/>
+<path class="marker discharge" style="--i:49" d="M943.3 112.53 L938.3 103.87 L948.3 103.87 Z"/>
+<path class="marker discharge" style="--i:50" d="M957.91 106.83 L952.91 98.17 L962.91 98.17 Z"/>
+<path class="marker discharge" style="--i:51" d="M1001.75 89.43 L996.75 80.77 L1006.75 80.77 Z"/>
+<path class="marker discharge" style="--i:52" d="M1044.55 75.34 L1039.55 66.68 L1049.55 66.68 Z"/>
+</svg>
+        <figcaption class="caption"><span class="fignum">Fig. 4.</span> <span class="what">Open-circuit voltage against state of charge on the charge (green) and discharge (black) branches, read after 60-minute rests. The gap between the branches is the hysteresis. The protocol visits six set points and skips the band between 35 and 45 %, so nothing is drawn there.</span> <span class="conditions">Synthetic cell, <code>hml_analysis</code> output; <a href="../../assets/figures/hml_ocv_branches.png">original PNG</a>.</span></figcaption>
+      </figure>
+      <figure class="figure">
+        <svg class="fig fig-minor" viewBox="0 0 720 560" role="img" aria-labelledby="minor-title minor-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="minor-title">Hysteresis minor loop at 55 percent state of charge, four matched pulse pairs, zoomed to the loop</title>
+<desc id="minor-desc">Zoomed to 48 to 68 percent state of charge. A dashed entry curve arrives from lower state of charge and reaches 55 percent at 3.762 volts. From there four short charge pulses and four discharge pulses form a sawtooth loop stepping 2 percent at a time: charge-branch open-circuit voltages between 3.79 and 3.87 volts sit above discharge-branch values between 3.77 and 3.86 volts. The vertical gap, 15.7 to 23.3 millivolts, is the hysteresis. Output of the Battery Characterization Suite on a synthetic cell.</desc>
+<clipPath id="minor-clip"><rect x="70" y="16" width="630" height="486"/></clipPath>
+<line class="grid" x1="148.75" y1="16" x2="148.75" y2="502"/>
+<line class="grid" x1="306.25" y1="16" x2="306.25" y2="502"/>
+<line class="grid" x1="463.75" y1="16" x2="463.75" y2="502"/>
+<line class="grid" x1="621.25" y1="16" x2="621.25" y2="502"/>
+<line class="grid" x1="70" y1="472.84" x2="700" y2="472.84"/>
+<line class="grid" x1="70" y1="375.64" x2="700" y2="375.64"/>
+<line class="grid" x1="70" y1="278.44" x2="700" y2="278.44"/>
+<line class="grid" x1="70" y1="181.24" x2="700" y2="181.24"/>
+<line class="grid" x1="70" y1="84.04" x2="700" y2="84.04"/>
+<path class="axis" d="M70 16 V502 H700"/>
+<text class="tick" x="148.75" y="520" text-anchor="middle">50</text>
+<text class="tick" x="306.25" y="520" text-anchor="middle">55</text>
+<text class="tick" x="463.75" y="520" text-anchor="middle">60</text>
+<text class="tick" x="621.25" y="520" text-anchor="middle">65</text>
+<text class="tick" x="62" y="476.34" text-anchor="end">3.70</text>
+<text class="tick" x="62" y="379.14" text-anchor="end">3.75</text>
+<text class="tick" x="62" y="281.94" text-anchor="end">3.80</text>
+<text class="tick" x="62" y="184.74" text-anchor="end">3.85</text>
+<text class="tick" x="62" y="87.54" text-anchor="end">3.90</text>
+<text class="axlabel" x="385" y="554" text-anchor="middle">State of charge (%)</text>
+<text class="axlabel" transform="translate(12 259) rotate(-90)" text-anchor="middle">Voltage (V)</text>
+<g clip-path="url(#minor-clip)">
+<path class="series entry" pathLength="1" d="M24.1 543.41 L26.56 536.41 L43.89 525.91 L46.38 518.72 L50.09 518.14 L59.98 510.75 L62.47 511.33 L63.7 502 L67.42 502.58 L76.08 495.2 L81.03 494.61 L82.25 484.5 L88.46 484.5 L94.63 478.28 L99.61 477.7 L102.07 468.95 L105.78 468.37 L111.96 462.15 L118.16 460.4 L120.62 451.65 L125.6 451.07 L134.26 444.26 L136.72 444.85 L137.98 435.52 L140.43 436.1 L146.64 431.04 L147.87 436.1 L155.3 422.49 L166.42 413.74 L170.14 413.74 L172.63 406.36 L177.57 403.83 L198.61 383.8 L203.56 384.58 L204.79 374.28 L209.77 373.89 L220.88 364.56 L224.6 358.92 L238.21 349.59 L239.47 341.62 L245.64 341.62 L255.54 334.23 L258.02 326.65 L266.69 321.79 L272.86 321.01 L275.35 309.93 L277.84 310.52 L279.07 325.87 L280.29 309.35 L281.55 315.76 L284.01 306.82 L285.24 313.82 L288.96 312.27 L290.22 301.38 L292.67 327.04 L293.9 292.44 L295.16 309.93 L296.39 293.8 L302.6 289.33 L307.54 312.46 L308.77 351.53 L333.53 351.53 L511.76 209.82"/>
+<path class="series hyst" pathLength="1" d="M369.25 296.32 L369.25 341.62"/>
+<path class="series hyst" pathLength="1" d="M432.25 241.5 L432.25 286.22"/>
+<path class="series hyst" pathLength="1" d="M495.25 189.21 L495.25 230.23"/>
+<path class="series hyst" pathLength="1" d="M558.25 140.22 L558.25 170.74"/>
+<path class="series charge late" pathLength="1" d="M306.25 351.53 L302.6 311.68 L307.54 309.35 L333.53 272.61 L369.25 232.17 L369.25 296.32 L373.12 250.25 L379.33 239.56 L432.25 177.55 L432.25 241.5 L436.25 194.26 L459.78 163.74 L490.71 132.06 L495.25 125.25 L495.25 189.21 L499.38 143.33 L503.09 137.11 L521.65 113.39 L553.84 82.29 L558.25 74.32 L558.25 140.22 L562.5 92.98 L564.99 89.29 L595.92 53.13 L616.97 34.47 L621.28 95.51 L621.28 27.08"/>
+<path class="series discharge late" pathLength="1" d="M306.25 351.53 L305.68 460.98 L305.68 460.98 L305.68 392.55 L310 453.59 L343.42 416.27 L364.46 386.92 L369.25 403.83 L369.25 341.62 L373.12 397.61 L404.09 363.39 L427.59 331.12 L432.25 349.01 L432.25 286.22 L436.25 341.62 L462.24 313.63 L489.49 276.88 L495.25 293.02 L495.25 230.23 L500.61 283.88 L511.76 272.02 L521.65 266.39 L522.91 253.95 L529.08 252 L542.69 232.76 L548.89 217.98 L551.35 226.54 L552.61 214.87 L558.25 209.23 L558.25 170.74 L572.39 207.29 L574.88 209.23 L582.32 199.9 L586.03 201.07 L588.49 184.93 L590.98 186.1 L602.1 167.44 L605.82 153.83 L610.76 160.05 L613.25 146.44 L620.68 133.42 L624.4 131.47"/>
+<path class="marker charge" style="--i:1" d="M369.25 289.97 L363.75 299.5 L374.75 299.5 Z"/>
+<path class="marker charge" style="--i:2" d="M432.25 235.15 L426.75 244.68 L437.75 244.68 Z"/>
+<path class="marker charge" style="--i:3" d="M495.25 182.86 L489.75 192.39 L500.75 192.39 Z"/>
+<path class="marker charge" style="--i:4" d="M558.25 133.87 L552.75 143.4 L563.75 143.4 Z"/>
+<path class="marker discharge" style="--i:5" d="M369.25 347.97 L363.75 338.44 L374.75 338.44 Z"/>
+<path class="marker discharge" style="--i:6" d="M432.25 292.57 L426.75 283.04 L437.75 283.04 Z"/>
+<path class="marker discharge" style="--i:7" d="M495.25 236.58 L489.75 227.05 L500.75 227.05 Z"/>
+<path class="marker discharge" style="--i:8" d="M558.25 177.09 L552.75 167.57 L563.75 167.57 Z"/>
+<circle class="marker entry" style="--i:9" cx="306.25" cy="351.53" r="6"/>
+</g>
+</svg>
+        <figcaption class="caption"><span class="fignum">Fig. 5.</span> <span class="what">One minor loop in detail, at the 55 % set point. Four matched charge and discharge pulse pairs step 2 % at a time; the charge-branch OCVs (3.7908 to 3.8711 V) sit 15.7 to 23.3 mV above the discharge-branch OCVs (3.7675 to 3.8554 V). The dashed line is the entry ramp that brought the cell to 55 %.</span> <span class="conditions">Synthetic cell, <code>hml_analysis</code> output; <a href="../../assets/figures/hml_minor_loop_55pct.png">original PNG</a>.</span>
+        <ul class="legend" role="list" aria-label="Legend"><li><i class="dashed"></i>Entry curve</li><li><i class="accent"></i>Charge branch and OCV</li><li><i></i>Discharge branch and OCV</li></ul></figcaption>
+      </figure>
+
+      <div class="demo" id="ecm-sim">
+        <div class="demo-head">
+          <h3>Educational simulation: what a 2RC equivalent circuit does to a pulse</h3>
+          <p>A simplified Thevenin model, computed in this page with the same zero-order-hold recurrence the estimator uses, at a fixed open-circuit voltage of 3.700 V. A 10-second discharge pulse is followed by 50 seconds of rest. This is not the estimator and not measured data; it is here to show what the parameters mean.</p>
+        </div>
+        <div class="demo-plot">
+          <svg class="sim-svg" viewBox="0 0 720 300" role="img" aria-label="Simulated terminal voltage of a 2RC equivalent circuit during a 2 amp, 10 second discharge pulse and 50 seconds of rest: an instantaneous 24 millivolt drop from R0, a further slower sag from the two RC branches to a minimum of 3.628 volts, then an instantaneous recovery at the end of the pulse and an exponential relaxation back toward 3.700 volts that is 3.8 millivolts short at 60 seconds." xmlns="http://www.w3.org/2000/svg">
+            <rect class="sim-pulse" x="60" y="16" width="107.3" height="244"/>
+            <line class="sim-ygrid" x1="60" x2="704" y1="260" y2="260"/><line class="sim-ygrid" x1="60" x2="704" y1="199" y2="199"/><line class="sim-ygrid" x1="60" x2="704" y1="138" y2="138"/><line class="sim-ygrid" x1="60" x2="704" y1="77" y2="77"/><line class="sim-ygrid" x1="60" x2="704" y1="16" y2="16"/>
+            <line class="sim-ocv" x1="60" x2="704" y1="42.6" y2="42.6"/>
+            <text class="sim-note" x="700" y="36" text-anchor="end">OCV 3.700 V</text>
+            <path class="sim-trace" d="M60.0 106.3 L61.1 109.8 L62.1 113.2 L63.2 116.5 L64.3 119.8 L65.4 122.9 L66.4 125.9 L67.5 128.9 L68.6 131.8 L69.7 134.5 L70.7 137.3 L71.8 139.9 L72.9 142.4 L74.0 144.9 L75.0 147.3 L76.1 149.7 L77.2 152.0 L78.2 154.2 L79.3 156.3 L80.4 158.4 L81.5 160.5 L82.5 162.5 L83.6 164.4 L84.7 166.3 L85.8 168.1 L86.8 169.9 L87.9 171.6 L89.0 173.3 L90.1 175.0 L91.1 176.6 L92.2 178.1 L93.3 179.7 L94.3 181.1 L95.4 182.6 L96.5 184.0 L97.6 185.4 L98.6 186.7 L99.7 188.0 L100.8 189.3 L101.9 190.5 L102.9 191.8 L104.0 192.9 L105.1 194.1 L106.2 195.2 L107.2 196.3 L108.3 197.4 L109.4 198.5 L110.4 199.5 L111.5 200.5 L112.6 201.5 L113.7 202.5 L114.7 203.4 L115.8 204.3 L116.9 205.2 L118.0 206.1 L119.0 207.0 L120.1 207.8 L121.2 208.7 L122.3 209.5 L123.3 210.3 L124.4 211.1 L125.5 211.8 L126.5 212.6 L127.6 213.3 L128.7 214.0 L129.8 214.8 L130.8 215.4 L131.9 216.1 L133.0 216.8 L134.1 217.5 L135.1 218.1 L136.2 218.8 L137.3 219.4 L138.4 220.0 L139.4 220.6 L140.5 221.2 L141.6 221.8 L142.6 222.4 L143.7 222.9 L144.8 223.5 L145.9 224.1 L146.9 224.6 L148.0 225.1 L149.1 225.7 L150.2 226.2 L151.2 226.7 L152.3 227.2 L153.4 227.7 L154.5 228.2 L155.5 228.7 L156.6 229.2 L157.7 229.6 L158.7 230.1 L159.8 230.6 L160.9 231.0 L162.0 231.5 L163.0 231.9 L164.1 232.4 L165.2 232.8 L166.3 233.2 L167.3 169.9 L168.4 166.8 L169.5 163.8 L170.6 160.9 L171.6 158.1 L172.7 155.4 L173.8 152.7 L174.8 150.2 L175.9 147.7 L177.0 145.3 L178.1 143.0 L179.1 140.7 L180.2 138.6 L181.3 136.5 L182.4 134.4 L183.4 132.4 L184.5 130.5 L185.6 128.7 L186.7 126.9 L187.7 125.1 L188.8 123.4 L189.9 121.8 L190.9 120.2 L192.0 118.7 L193.1 117.2 L194.2 115.8 L195.2 114.4 L196.3 113.0 L197.4 111.7 L198.5 110.4 L199.5 109.2 L200.6 108.0 L201.7 106.9 L202.8 105.7 L203.8 104.7 L204.9 103.6 L206.0 102.6 L207.0 101.6 L208.1 100.6 L209.2 99.7 L210.3 98.8 L211.3 97.9 L212.4 97.1 L213.5 96.2 L214.6 95.4 L215.6 94.7 L216.7 93.9 L217.8 93.2 L218.9 92.5 L219.9 91.8 L221.0 91.1 L222.1 90.5 L223.1 89.8 L224.2 89.2 L225.3 88.6 L226.4 88.1 L227.4 87.5 L228.5 86.9 L229.6 86.4 L230.7 85.9 L231.7 85.4 L232.8 84.9 L233.9 84.4 L235.0 84.0 L236.0 83.5 L237.1 83.1 L238.2 82.7 L239.2 82.3 L240.3 81.9 L241.4 81.5 L242.5 81.1 L243.5 80.7 L244.6 80.4 L245.7 80.0 L246.8 79.7 L247.8 79.4 L248.9 79.0 L250.0 78.7 L251.1 78.4 L252.1 78.1 L253.2 77.8 L254.3 77.6 L255.3 77.3 L256.4 77.0 L257.5 76.8 L258.6 76.5 L259.6 76.2 L260.7 76.0 L261.8 75.8 L262.9 75.5 L263.9 75.3 L265.0 75.1 L266.1 74.9 L267.2 74.7 L268.2 74.5 L269.3 74.3 L270.4 74.1 L271.4 73.9 L272.5 73.7 L273.6 73.5 L274.7 73.3 L275.7 73.1 L276.8 73.0 L277.9 72.8 L279.0 72.6 L280.0 72.5 L281.1 72.3 L282.2 72.1 L283.3 72.0 L284.3 71.8 L285.4 71.7 L286.5 71.5 L287.5 71.4 L288.6 71.3 L289.7 71.1 L290.8 71.0 L291.8 70.9 L292.9 70.7 L294.0 70.6 L295.1 70.5 L296.1 70.4 L297.2 70.2 L298.3 70.1 L299.4 70.0 L300.4 69.9 L301.5 69.8 L302.6 69.7 L303.6 69.6 L304.7 69.4 L305.8 69.3 L306.9 69.2 L307.9 69.1 L309.0 69.0 L310.1 68.9 L311.2 68.8 L312.2 68.7 L313.3 68.6 L314.4 68.5 L315.5 68.4 L316.5 68.4 L317.6 68.3 L318.7 68.2 L319.7 68.1 L320.8 68.0 L321.9 67.9 L323.0 67.8 L324.0 67.7 L325.1 67.6 L326.2 67.6 L327.3 67.5 L328.3 67.4 L329.4 67.3 L330.5 67.2 L331.6 67.2 L332.6 67.1 L333.7 67.0 L334.8 66.9 L335.8 66.8 L336.9 66.8 L338.0 66.7 L339.1 66.6 L340.1 66.5 L341.2 66.5 L342.3 66.4 L343.4 66.3 L344.4 66.3 L345.5 66.2 L346.6 66.1 L347.7 66.0 L348.7 66.0 L349.8 65.9 L350.9 65.8 L351.9 65.8 L353.0 65.7 L354.1 65.6 L355.2 65.6 L356.2 65.5 L357.3 65.4 L358.4 65.4 L359.5 65.3 L360.5 65.3 L361.6 65.2 L362.7 65.1 L363.8 65.1 L364.8 65.0 L365.9 64.9 L367.0 64.9 L368.0 64.8 L369.1 64.8 L370.2 64.7 L371.3 64.6 L372.3 64.6 L373.4 64.5 L374.5 64.5 L375.6 64.4 L376.6 64.3 L377.7 64.3 L378.8 64.2 L379.9 64.2 L380.9 64.1 L382.0 64.0 L383.1 64.0 L384.1 63.9 L385.2 63.9 L386.3 63.8 L387.4 63.8 L388.4 63.7 L389.5 63.6 L390.6 63.6 L391.7 63.5 L392.7 63.5 L393.8 63.4 L394.9 63.4 L396.0 63.3 L397.0 63.3 L398.1 63.2 L399.2 63.2 L400.2 63.1 L401.3 63.0 L402.4 63.0 L403.5 62.9 L404.5 62.9 L405.6 62.8 L406.7 62.8 L407.8 62.7 L408.8 62.7 L409.9 62.6 L411.0 62.6 L412.1 62.5 L413.1 62.5 L414.2 62.4 L415.3 62.4 L416.3 62.3 L417.4 62.3 L418.5 62.2 L419.6 62.2 L420.6 62.1 L421.7 62.1 L422.8 62.0 L423.9 62.0 L424.9 61.9 L426.0 61.9 L427.1 61.8 L428.2 61.8 L429.2 61.7 L430.3 61.7 L431.4 61.6 L432.4 61.6 L433.5 61.5 L434.6 61.5 L435.7 61.4 L436.7 61.4 L437.8 61.3 L438.9 61.3 L440.0 61.2 L441.0 61.2 L442.1 61.1 L443.2 61.1 L444.3 61.1 L445.3 61.0 L446.4 61.0 L447.5 60.9 L448.5 60.9 L449.6 60.8 L450.7 60.8 L451.8 60.7 L452.8 60.7 L453.9 60.6 L455.0 60.6 L456.1 60.5 L457.1 60.5 L458.2 60.5 L459.3 60.4 L460.4 60.4 L461.4 60.3 L462.5 60.3 L463.6 60.2 L464.6 60.2 L465.7 60.1 L466.8 60.1 L467.9 60.1 L468.9 60.0 L470.0 60.0 L471.1 59.9 L472.2 59.9 L473.2 59.8 L474.3 59.8 L475.4 59.8 L476.5 59.7 L477.5 59.7 L478.6 59.6 L479.7 59.6 L480.7 59.5 L481.8 59.5 L482.9 59.5 L484.0 59.4 L485.0 59.4 L486.1 59.3 L487.2 59.3 L488.3 59.2 L489.3 59.2 L490.4 59.2 L491.5 59.1 L492.6 59.1 L493.6 59.0 L494.7 59.0 L495.8 59.0 L496.8 58.9 L497.9 58.9 L499.0 58.8 L500.1 58.8 L501.1 58.7 L502.2 58.7 L503.3 58.7 L504.4 58.6 L505.4 58.6 L506.5 58.5 L507.6 58.5 L508.7 58.5 L509.7 58.4 L510.8 58.4 L511.9 58.3 L512.9 58.3 L514.0 58.3 L515.1 58.2 L516.2 58.2 L517.2 58.1 L518.3 58.1 L519.4 58.1 L520.5 58.0 L521.5 58.0 L522.6 58.0 L523.7 57.9 L524.8 57.9 L525.8 57.8 L526.9 57.8 L528.0 57.8 L529.0 57.7 L530.1 57.7 L531.2 57.6 L532.3 57.6 L533.3 57.6 L534.4 57.5 L535.5 57.5 L536.6 57.5 L537.6 57.4 L538.7 57.4 L539.8 57.4 L540.9 57.3 L541.9 57.3 L543.0 57.2 L544.1 57.2 L545.1 57.2 L546.2 57.1 L547.3 57.1 L548.4 57.1 L549.4 57.0 L550.5 57.0 L551.6 56.9 L552.7 56.9 L553.7 56.9 L554.8 56.8 L555.9 56.8 L557.0 56.8 L558.0 56.7 L559.1 56.7 L560.2 56.7 L561.2 56.6 L562.3 56.6 L563.4 56.6 L564.5 56.5 L565.5 56.5 L566.6 56.5 L567.7 56.4 L568.8 56.4 L569.8 56.3 L570.9 56.3 L572.0 56.3 L573.1 56.2 L574.1 56.2 L575.2 56.2 L576.3 56.1 L577.3 56.1 L578.4 56.1 L579.5 56.0 L580.6 56.0 L581.6 56.0 L582.7 55.9 L583.8 55.9 L584.9 55.9 L585.9 55.8 L587.0 55.8 L588.1 55.8 L589.2 55.7 L590.2 55.7 L591.3 55.7 L592.4 55.6 L593.4 55.6 L594.5 55.6 L595.6 55.5 L596.7 55.5 L597.7 55.5 L598.8 55.4 L599.9 55.4 L601.0 55.4 L602.0 55.4 L603.1 55.3 L604.2 55.3 L605.3 55.3 L606.3 55.2 L607.4 55.2 L608.5 55.2 L609.5 55.1 L610.6 55.1 L611.7 55.1 L612.8 55.0 L613.8 55.0 L614.9 55.0 L616.0 54.9 L617.1 54.9 L618.1 54.9 L619.2 54.8 L620.3 54.8 L621.4 54.8 L622.4 54.8 L623.5 54.7 L624.6 54.7 L625.6 54.7 L626.7 54.6 L627.8 54.6 L628.9 54.6 L629.9 54.5 L631.0 54.5 L632.1 54.5 L633.2 54.5 L634.2 54.4 L635.3 54.4 L636.4 54.4 L637.5 54.3 L638.5 54.3 L639.6 54.3 L640.7 54.2 L641.7 54.2 L642.8 54.2 L643.9 54.2 L645.0 54.1 L646.0 54.1 L647.1 54.1 L648.2 54.0 L649.3 54.0 L650.3 54.0 L651.4 54.0 L652.5 53.9 L653.6 53.9 L654.6 53.9 L655.7 53.8 L656.8 53.8 L657.8 53.8 L658.9 53.8 L660.0 53.7 L661.1 53.7 L662.1 53.7 L663.2 53.7 L664.3 53.6 L665.4 53.6 L666.4 53.6 L667.5 53.5 L668.6 53.5 L669.7 53.5 L670.7 53.5 L671.8 53.4 L672.9 53.4 L673.9 53.4 L675.0 53.3 L676.1 53.3 L677.2 53.3 L678.2 53.3 L679.3 53.2 L680.4 53.2 L681.5 53.2 L682.5 53.2 L683.6 53.1 L684.7 53.1 L685.8 53.1 L686.8 53.1 L687.9 53.0 L689.0 53.0 L690.0 53.0 L691.1 53.0 L692.2 52.9 L693.3 52.9 L694.3 52.9 L695.4 52.8 L696.5 52.8 L697.6 52.8 L698.6 52.8 L699.7 52.7 L700.8 52.7 L701.9 52.7 L702.9 52.7 L704.0 52.6"/>
+            <text class="sim-ytick" x="52" y="264" text-anchor="end">3.618</text><text class="sim-ytick" x="52" y="203" text-anchor="end">3.641</text><text class="sim-ytick" x="52" y="142" text-anchor="end">3.664</text><text class="sim-ytick" x="52" y="81" text-anchor="end">3.687</text><text class="sim-ytick" x="52" y="20" text-anchor="end">3.710</text>
+            <text x="60" y="280" text-anchor="middle">0</text><text x="167.3" y="280" text-anchor="middle">10</text><text x="274.7" y="280" text-anchor="middle">20</text><text x="382" y="280" text-anchor="middle">30</text><text x="489.3" y="280" text-anchor="middle">40</text><text x="596.7" y="280" text-anchor="middle">50</text><text x="704" y="280" text-anchor="middle">60 s</text>
+            <text x="52" y="292" text-anchor="end">V</text>
+            <text x="113" y="30" text-anchor="middle">pulse</text>
+          </svg>
+        </div>
+        <div class="demo-controls">
+          <label><span class="lbl"><span>Pulse current I</span><output for="sim-i">2 A</output></span><input type="range" id="sim-i" data-param="i" data-unit="A" min="0.5" max="5" step="0.1" value="2"></label>
+          <label><span class="lbl"><span>R<sub>0</sub>, series resistance</span><output for="sim-r0">12 mΩ</output></span><input type="range" id="sim-r0" data-param="r0" data-unit="mΩ" min="2" max="40" step="1" value="12"></label>
+          <label><span class="lbl"><span>R<sub>1</sub></span><output for="sim-r1">18 mΩ</output></span><input type="range" id="sim-r1" data-param="r1" data-unit="mΩ" min="2" max="40" step="1" value="18"></label>
+          <label><span class="lbl"><span>C<sub>1</sub></span><output for="sim-c1">167 F</output></span><input type="range" id="sim-c1" data-param="c1" data-unit="F" min="20" max="1000" step="1" value="167"></label>
+          <label><span class="lbl"><span>R<sub>2</sub></span><output for="sim-r2">30 mΩ</output></span><input type="range" id="sim-r2" data-param="r2" data-unit="mΩ" min="5" max="60" step="1" value="30"></label>
+          <label><span class="lbl"><span>C<sub>2</sub></span><output for="sim-c2">1333 F</output></span><input type="range" id="sim-c2" data-param="c2" data-unit="F" min="200" max="5000" step="1" value="1333"></label>
+        </div>
+        <dl class="demo-readouts">
+          <div><dt>Instant drop, I·R<sub>0</sub></dt><dd data-read="drop">24.0 mV</dd></div>
+          <div><dt>Minimum voltage</dt><dd data-read="min">3.628 V</dd></div>
+          <div><dt>Still to relax at 60 s</dt><dd data-read="settle">3.8 mV</dd></div>
+          <div><dt>τ<sub>1</sub> = R<sub>1</sub>C<sub>1</sub></dt><dd data-read="tau1">3.0 s</dd></div>
+          <div><dt>τ<sub>2</sub> = R<sub>2</sub>C<sub>2</sub></dt><dd data-read="tau2">40 s</dd></div>
+        </dl>
+        <p class="demo-static-note">The plot shows the default parameters (I = 2 A, R<sub>0</sub> = 12 mΩ, R<sub>1</sub> = 18 mΩ, C<sub>1</sub> = 167 F, R<sub>2</sub> = 30 mΩ, C<sub>2</sub> = 1333 F). With JavaScript enabled the sliders recompute it.</p>
+        <p class="caption"><span class="what">Reading the plot:</span> the vertical step at the start of the pulse is I·R<sub>0</sub>; the curved sag during the pulse is the two RC branches charging; the step at the end of the pulse is R<sub>0</sub> again; the slow return toward OCV is the branches discharging with time constants τ<sub>1</sub> and τ<sub>2</sub>. The residual at 60 s is why the real tool reads OCV only at the end of long rests and reports the undecayed part as an irreducible residual.</p>
+      </div>
+    </section>
+
+    <section id="validation" class="case-section" aria-labelledby="validation-h">
+      <h2 id="validation-h">Validation and results</h2>
+      <div class="prose">
+        <h3>Recovering what the analysis was never told</h3>
+        <p>The HML dataset is produced by simulating a cell model against a test schedule, so the simulator knows the true state of charge at every sample and the true equilibrium voltage each rest was relaxing toward. The analysis sees only the columns a cycler exports. The table at the top of this page is the result; this is the actual output of the validation script on my machine.</p>
+      </div>
+      <div class="evidence">
+        <div class="evidence-head"><span>Output of <code>python scripts/validate_hml_against_truth.py</code></span><span>22 Sep 2026, clean clone, Python 3.13</span></div>
+        <pre tabindex="0">dataset    hml_analysis/input/synthetic_hml.xlsx
+protocol   Supplier HML characterisation
+capacity   5.00 Ah nominal, 4.9991 Ah removed by the conditioning discharge
+charge sign detected +1, true +1   OK
+
+Recovery error (analysis minus truth)
+------------------------------------------------------------------------
+  state of charge            n=56226 max    0.020 %SOC   rms    0.013 %SOC
+                             56226 of 61116 samples have known SOC; the rest precede the reference charge
+  open-circuit voltage       n=66    max    0.899 mV   rms    0.264 mV
+  hysteresis                 n=24    max    0.529 mV   rms    0.306 mV
+
+  Irreducible OCV extraction residual: 1.640 mV -- the polarisation still
+  undecayed at the end of a finite rest. A floor set by the test
+  protocol, not by the analysis.</pre>
+        <p class="caption">The 1.640 mV irreducible residual is polarisation that has not decayed by the end of a finite rest. It is set by the rest length in the test protocol, so longer rests would reduce it and better code would not.</p>
+      </div>
+      <div class="prose">
+        <h3>Recovering a known circuit from noisy data</h3>
+        <p>The estimator is checked by round trip: simulate a known circuit with the forward model, add Gaussian noise, fit, compare. The forward simulator and the estimator are separate code paths. In both cases the fit RMSE lands on the noise that was added; a fit that went below the noise floor would be fitting the noise.</p>
+      </div>
+      <div class="tbl-scroll">
+        <table class="tbl tbl--dense">
+          <caption>Equivalent-circuit round trip, three pulses, 1,495 samples. Worst-case parameter error is in τ<sub>1</sub> both times, the fastest time constant and the hardest to resolve at the sample rate. Reproduced 22 September 2026 with <code>scripts/demo_ecm_roundtrip.py</code>.</caption>
+          <thead><tr><td></td><th scope="col" class="num">2RC, 0.5 mV noise</th><th scope="col" class="num">3RC, 1.0 mV noise</th></tr></thead>
+          <tbody>
+            <tr><td>Worst parameter error</td><td class="num">1.07 % (τ<sub>1</sub>)</td><td class="num">4.74 % (τ<sub>1</sub>)</td></tr>
+            <tr><td>Fit RMSE</td><td class="num">0.4946 mV</td><td class="num">0.9889 mV</td></tr>
+            <tr><td>Noise floor</td><td class="num">0.5000 mV</td><td class="num">1.0000 mV</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <details class="more">
+        <summary>Full output of the 2RC round trip</summary>
+        <div class="evidence">
+          <div class="evidence-head"><span>Output of <code>python scripts/demo_ecm_roundtrip.py --order 2 --noise-mv 0.5</code></span><span>22 Sep 2026</span></div>
+          <pre tabindex="0">2RC model, 3 pulses, 0.5 mV measurement noise
+solver: `ftol` termination condition is satisfied.
+
+parameter unit  true   fitted  error %
+       R0    Ω 0.012 0.012036  0.30288
+       R1    Ω 0.018 0.018017 0.092634
+     tau1    s     3    3.032   1.0654
+       R2    Ω  0.03 0.029946  0.17997
+     tau2    s    40   40.082  0.20379
+
+  fit RMSE           0.4946 mV over 3 window(s), 1495 samples
+  holdout RMSE       -- no holdout window
+  noise floor        0.5000 mV -- the residual cannot go below this</pre>
+        </div>
+      </details>
+      <div class="prose">
+        <h3>What the tests check</h3>
+        <p>There are 1,173 automated tests across the four tools. The count is not the point; what they cover is. Unit tests pin the sign, unit and capacity conventions at the one place each is converted, the DOE grammar (headers, step vocabulary, cut-off criteria, repeat resolution), segmentation edge cases, and the estimator's recurrence against closed-form solutions. Forty-six integration tests launch the real analysis backends as subprocesses and feed their bundles through the consuming code, so a contract change on either side fails in CI. A layering test asserts which modules may import <code>battery_ecm</code>. The DCIR tool's Ohm's-law cross-check runs on every row of every input as an integrity gate, and reports the largest deviation.</p>
+      </div>
+    </section>
+
+    <section id="limits" class="case-section" aria-labelledby="limits-h">
+      <h2 id="limits-h">Limitations and next steps</h2>
+      <div class="prose">
+        <p>These are the repository's own stated limitations, kept here because they bound what the results above mean.</p>
+        <ul>
+          <li>No real cell data is included. Every dataset is simulator output. The synthetic cell reproduces the effects the analyses look for (hysteresis that saturates with excursion size, resistance that rises as the cell cools) but it is not fitted to any measured chemistry. Recovery accuracy on real data will be worse.</li>
+          <li>The DCIR tool does not measure resistance from a raw trace. It reads the supplier's reported DCIR, re-derives each value from the pulse endpoints as an integrity check, then averages and reports.</li>
+          <li>Coulombic efficiency is assumed to be 1, and nominal capacity is an input, so the SOC axis is only as accurate as the capacity supplied.</li>
+          <li>The fitted equivalent circuit has no temperature dependence and no hysteresis state; the saturating hysteresis model exists only in the simulator.</li>
+          <li>Only DCIR and HML have analysis backends. HPPC, GITT, rate-performance and OCV procedures parse and simulate as DOEs but have no analysis tool behind them. Ageing is out of scope.</li>
+        </ul>
+        <p>Next steps that follow from those: extract DCIR directly from raw pulse traces so the Ohm's-law check becomes a measurement path as well; fit <span class="sans">R<sub>0</sub>(T, z)</span> and <span class="sans">R<sub>i</sub>(T, z)</span> across a temperature and SOC sweep to produce the lookup tables a BMS loads; add a hysteresis state to the fitted circuit and identify it from the HML output; and build the HPPC and GITT backends, which would reuse most of the rest-detection code.</p>
+      </div>
+    </section>
+
+    <section id="links" class="case-section" aria-labelledby="links-h">
+      <h2 id="links-h">Repository and related work</h2>
+      <ul class="related" role="list">
+        <li><a href="https://github.com/PaarthPatodia/battery-ecm-toolkit"><span class="kind">Repository</span><span class="name">battery-ecm-toolkit on GitHub</span></a></li>
+        <li><a href="https://github.com/PaarthPatodia/battery-ecm-toolkit/blob/main/docs/theory/README.md"><span class="kind">Documentation</span><span class="name">Engineering theory: the equations, each tied to the function that implements it</span></a></li>
+        <li><a href="https://github.com/PaarthPatodia/battery-ecm-toolkit/blob/main/docs/architecture.md"><span class="kind">Documentation</span><span class="name">Architecture: process isolation, the bundle contract, layering</span></a></li>
+        <li><a href="../../#experience"><span class="kind">Related</span><span class="name">Maruti Suzuki internship, Summer 2026</span></a></li>
+      </ul>
+    </section>
+
+  </div>
+</div>
+
+</main>
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-col">
+      <p class="footer-name">Paarth Patodia</p>
+      <p class="footer-line">B.S. Electrical Engineering, UMass Amherst, expected May 2028. Seeking a Summer 2027 engineering internship.</p>
+    </div>
+    <ul class="footer-links" role="list">
+      <li><a href="mailto:paarth.patodia@gmail.com">paarth.patodia@gmail.com</a></li>
+      <li><a href="https://github.com/PaarthPatodia" rel="me">github.com/PaarthPatodia</a></li>
+      <li><a href="../../assets/Paarth_Patodia_Resume.pdf" download>Résumé (PDF)</a></li>
+    </ul>
+    <p class="footer-note">Every claim on this site comes from my CV and the two public repositories. Battery figures are outputs of the open-source toolkit on a synthetic cell, not measurements of a real cell. Static HTML, no analytics, no trackers.</p>
+  </div>
+</footer>
+<script src="../../js/site.js" defer></script>
+
+</body>
+</html>

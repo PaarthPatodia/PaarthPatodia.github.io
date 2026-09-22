@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Infrared target simulator, a case study by Paarth Patodia</title>
+<meta name="description" content="A prototype infrared target simulator for FLIR camera testing: Arduino PWM heater-control firmware, MOSFET-driven resistive heater channels, and validation against the camera's thermal image. Built at Leapedge Aerospace and Defense, January 2026.">
+<meta name="author" content="Paarth Patodia">
+<meta name="theme-color" content="#F4F4F1">
+<meta name="color-scheme" content="light">
+<link rel="canonical" href="https://paarthpatodia.github.io/work/infrared-target-simulator/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Paarth Patodia">
+<meta property="og:title" content="Infrared target simulator">
+<meta property="og:description" content="A prototype infrared target simulator for FLIR camera testing: Arduino PWM heater-control firmware, MOSFET-driven resistive heater channels, and validation against the camera's thermal image. Built at Leapedge Aerospace and Defense, January 2026.">
+<meta property="og:url" content="https://paarthpatodia.github.io/work/infrared-target-simulator/">
+<meta property="og:image" content="https://paarthpatodia.github.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Paarth Patodia, electrical engineering student at UMass Amherst: battery analysis tools and embedded systems.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23F4F4F1'/%3E%3Cpath d='M4 11h5l2 12 4-7 5-3 6-1' fill='none' stroke='%2317191D' stroke-width='2.2' stroke-linejoin='round' stroke-linecap='round'/%3E%3Ccircle cx='26' cy='12' r='3.4' fill='%230B6E55'/%3E%3C/svg%3E">
+<link rel="preload" href="../../assets/fonts/bricolage-grotesque-200-800-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../assets/fonts/ibm-plex-mono-400-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/site.css">
+<script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#B9BDB6" stroke-width="1"/>
+    </pattern>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0.5 L9.5 5 L0 9.5 z" fill="#17191D"/>
+    </marker>
+    <marker id="arrowhead-soft" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0.5 L9.5 5 L0 9.5 z" fill="#6B727A"/>
+    </marker>
+  </defs>
+</svg>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../../" aria-label="Paarth Patodia, home">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="26" height="26" aria-hidden="true" focusable="false"><path d="M3 11h5l2 12 4-7 5-3 7-1" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="27" cy="12" r="3.4" fill="#0B6E55"/></svg>
+      <span>Paarth Patodia</span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu" hidden>
+      <span class="menu-toggle-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="menu-toggle-label">Menu</span>
+    </button>
+    <nav id="site-menu" class="menu" aria-label="Site">
+      <ul class="menu-list" role="list">
+        <li><a href="../../#work" aria-current="page">Work</a></li>
+        <li><a href="../../#experience">Experience</a></li>
+        <li><a href="../../#about">About</a></li>
+        <li><a href="../../#contact">Contact</a></li>
+      </ul>
+      <a class="btn btn-primary btn-small menu-resume" href="../../assets/Paarth_Patodia_Resume.pdf" download>Résumé (PDF)</a>
+    </nav>
+  </div>
+</header>
+
+
+<main id="main">
+
+<header class="case-head container">
+  <ol class="crumbs" role="list"><li><a href="../../">Home</a></li><li><a href="../../#work">Work</a></li><li>Infrared target simulator</li></ol>
+  <h1>Infrared target simulator</h1>
+  <p class="standfirst">A prototype that reproduces thermal signatures for testing FLIR cameras: a resistive heater array, MOSFET-driven channels, and Arduino firmware that switches heating patterns across the array under PWM control.</p>
+  <dl class="case-meta">
+    <div><dt>Role</dt><dd>Embedded Systems Engineering Intern. I built the prototype under the guidance of a senior engineer while learning PWM and heater control.</dd></div>
+    <div><dt>Organisation and dates</dt><dd>Leapedge Aerospace and Defense Technologies Pvt Ltd, Sohna, India. January 2026.</dd></div>
+    <div><dt>Context</dt><dd>A defence imaging project (FLIR / infrared for targeting). Photographs, schematics, dimensions and measured performance are not published.</dd></div>
+    <div><dt>Tools</dt><dd>Arduino, PWM, MOSFET driver and switching circuits, breadboard and soldered assembly, FLIR thermal camera</dd></div>
+  </dl>
+</header>
+
+<div class="container">
+  <section class="key-result" aria-labelledby="kr-h">
+    <h2 id="kr-h">What was delivered</h2>
+    <div class="kr-text">
+      <p>A working prototype: programmed heating patterns on the array, driven by the firmware through the switched channels, were compared against the thermal image captured by a FLIR camera. The comparison of programmed state against captured output was the validation.</p>
+      <p>No quantitative performance figures are published for this work, and none are claimed here.</p>
+    </div>
+    <div class="kr-table">
+      <dl class="work-facts">
+        <div><dt>Firmware</dt><dd>PWM-based heater control on Arduino: drives and switches heating patterns across the array.</dd></div>
+        <div><dt>Hardware</dt><dd>MOSFET-driven heater channels, assembled and tested with a senior engineer; multi-channel switching and driver-circuit fundamentals learned on the bench.</dd></div>
+        <div><dt>Validation</dt><dd>Heating patterns checked with a FLIR thermal camera against the programmed states.</dd></div>
+        <div><dt>Analysis</dt><dd>A drafted scalability study of how a 4×4 or 8×8 array architecture could extend to a larger grid, considering power and synchronisation trade-offs.</dd></div>
+      </dl>
+    </div>
+  </section>
+</div>
+
+<div class="container case-body">
+  <nav class="case-toc" aria-label="On this page">
+    <h2>On this page</h2>
+    <ol role="list">
+      <li><a href="#problem">Problem and constraints</a></li>
+      <li><a href="#built">What I built</a></li>
+      <li><a href="#decisions">Decisions and what I learned</a></li>
+      <li><a href="#validation">Validation</a></li>
+      <li><a href="#scale">Scalability analysis</a></li>
+      <li><a href="#limits">Limitations and scope</a></li>
+      <li><a href="#links">Related work</a></li>
+    </ol>
+  </nav>
+
+  <div class="case-main">
+
+    <section id="problem" class="case-section" aria-labelledby="problem-h">
+      <h2 id="problem-h">Problem and constraints</h2>
+      <div class="prose">
+        <p>Testing a thermal camera needs a target whose infrared signature is known and repeatable. A resistive heater array can provide one: each element is driven to a chosen power, the array as a whole presents a spatial thermal pattern, and the camera's image of it can be compared against what was programmed.</p>
+        <p>The prototype had to switch heating patterns across the array under software control, which means one independently driven channel per element, a driver stage that can carry heater current from a logic-level signal, and firmware that sets each channel's duty.</p>
+      </div>
+    </section>
+
+    <section id="built" class="case-section" aria-labelledby="built-h">
+      <h2 id="built-h">What I built</h2>
+      <figure class="figure">
+        <svg class="diagram diagram-ir" viewBox="0 0 900 330" role="img" aria-labelledby="ir-title ir-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="ir-title">Conceptual signal chain of the infrared target simulator prototype</title>
+<desc id="ir-desc">Left to right: a heating pattern is programmed into Arduino firmware, which drives one PWM output per channel; each PWM line switches a MOSFET driver stage, and each driver stage powers one resistive heater element in an array. A FLIR thermal camera views the array, and the captured thermal image is compared against the programmed pattern to validate the prototype. This is a conceptual diagram, not a schematic or photograph of the hardware.</desc>
+<!-- Arduino -->
+<rect class="box" x="24" y="96" width="176" height="112"/>
+<text class="lbl" x="112" y="128" text-anchor="middle">Arduino firmware</text>
+<text class="sub" x="112" y="150" text-anchor="middle">heating pattern table</text>
+<text class="sub" x="112" y="168" text-anchor="middle">per-channel PWM duty</text>
+<text class="tag tag-accent" x="112" y="194" text-anchor="middle">my firmware</text>
+<!-- PWM lines -->
+<path class="arrow" d="M200 124 H258"/>
+<path class="arrow" d="M200 152 H258"/>
+<path class="arrow" d="M200 180 H258"/>
+<text class="tag" x="229" y="112" text-anchor="middle">PWM</text>
+<!-- MOSFET drivers -->
+<rect class="box" x="262" y="96" width="176" height="112"/>
+<text class="lbl" x="350" y="128" text-anchor="middle">MOSFET drivers</text>
+<text class="sub" x="350" y="150" text-anchor="middle">one switched channel</text>
+<text class="sub" x="350" y="168" text-anchor="middle">per heater element</text>
+<text class="tag tag-accent" x="350" y="194" text-anchor="middle">assembled and tested</text>
+<!-- power lines to array -->
+<path class="arrow" d="M438 124 H496"/>
+<path class="arrow" d="M438 152 H496"/>
+<path class="arrow" d="M438 180 H496"/>
+<text class="tag" x="467" y="112" text-anchor="middle">current</text>
+<!-- heater array: an unspecified grid, some elements on -->
+<rect class="box" x="500" y="60" width="176" height="184"/>
+<text class="lbl" x="588" y="86" text-anchor="middle">Resistive heater array</text>
+<g transform="translate(524 100)">
+  <rect class="heat" x="0" y="0" width="28" height="28"/><rect class="heat-on heat" x="34" y="0" width="28" height="28"/><rect class="heat-on heat" x="68" y="0" width="28" height="28"/><rect class="heat" x="102" y="0" width="28" height="28"/>
+  <rect class="heat-warm heat" x="0" y="34" width="28" height="28"/><rect class="heat-on heat" x="34" y="34" width="28" height="28"/><rect class="heat-on heat" x="68" y="34" width="28" height="28"/><rect class="heat-warm heat" x="102" y="34" width="28" height="28"/>
+  <rect class="heat" x="0" y="68" width="28" height="28"/><rect class="heat-warm heat" x="34" y="68" width="28" height="28"/><rect class="heat-warm heat" x="68" y="68" width="28" height="28"/><rect class="heat" x="102" y="68" width="28" height="28"/>
+</g>
+<text class="sub" x="588" y="226" text-anchor="middle">programmed pattern</text>
+<!-- camera -->
+<path class="arrow-soft" d="M676 152 H734"/>
+<text class="tag" x="705" y="140" text-anchor="middle">infrared</text>
+<rect class="box" x="738" y="112" width="138" height="80"/>
+<text class="lbl" x="807" y="146" text-anchor="middle">FLIR camera</text>
+<text class="sub" x="807" y="168" text-anchor="middle">thermal image</text>
+<!-- validation loop -->
+<path class="arrow" d="M807 192 V276 H112 V212"/>
+<text class="sub" x="460" y="268" text-anchor="middle">validation: captured thermal output compared against the programmed state</text>
+<text class="tag" x="24" y="318">Conceptual diagram; channel count, array size and geometry are not shown.</text>
+</svg>
+        <figcaption class="caption"><span class="fignum">Fig. 1.</span> <span class="what">Conceptual signal chain of the prototype: firmware sets a PWM duty per channel; each PWM line switches a MOSFET driver; each driver powers one heater element; the FLIR camera views the array and its image is compared with the programmed pattern.</span> <span class="conditions">A conceptual diagram drawn for this page. It is not a schematic, and it does not show the real channel count, array dimensions or layout.</span></figcaption>
+      </figure>
+      <div class="prose">
+        <ul>
+          <li><strong>Heater-control firmware.</strong> Arduino code that holds a heating pattern and drives it onto the array as per-channel PWM duty cycles, switching between patterns over time.</li>
+          <li><strong>Driver channels.</strong> MOSFET-driven heater channels, assembled and tested on the bench under a senior engineer's guidance. This is where I learned multi-channel switching and driver-circuit fundamentals in practice: gate drive from a logic-level output, heater current through the switch, and checking each channel before trusting the array.</li>
+          <li><strong>Thermal validation.</strong> Programmed states captured with a FLIR thermal camera and compared against the intended pattern.</li>
+          <li><strong>Scalability draft.</strong> An analysis of how a 4×4 or 8×8 array architecture could extend to a larger grid, weighing power distribution against channel synchronisation.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="decisions" class="case-section" aria-labelledby="decisions-h">
+      <h2 id="decisions-h">Decisions and what I learned</h2>
+      <div class="prose">
+        <p>The engineering here was mostly practical. PWM gives proportional control of a resistive element's average power from a digital output, and because a heater's thermal time constant is long compared with the PWM period, the element integrates the pulses into a steady temperature. A MOSFET per channel keeps the heater current off the microcontroller and lets one logic line switch a much larger load.</p>
+        <p>The scope was deliberately bounded. I built and tested under guidance rather than owning the design; the senior engineer set the architecture and checked the work. What I took away is the hands-on competence the résumé lists under embedded and hardware: Arduino firmware, PWM control, MOSFET driver and switching circuits, breadboard prototyping and soldering, and using a thermal camera as a measurement instrument.</p>
+      </div>
+    </section>
+
+    <section id="validation" class="case-section" aria-labelledby="validation-h">
+      <h2 id="validation-h">Validation</h2>
+      <div class="prose">
+        <p>Validation was qualitative and direct: program a heating pattern, capture the array with the FLIR camera, and compare the thermal image against the programmed state. No performance metrics (uniformity, rise time, contrast) were recorded for publication, and none are stated here.</p>
+      </div>
+    </section>
+
+    <section id="scale" class="case-section" aria-labelledby="scale-h">
+      <h2 id="scale-h">Scalability analysis</h2>
+      <div class="prose">
+        <p>Separately from the implemented prototype, I drafted an analysis of how a 4×4 or 8×8 array architecture could extend to a larger grid. The two trade-offs it considers are power (total and per-channel current, distribution and switching losses as the element count grows) and synchronisation (keeping many PWM channels coherent so a pattern appears as one thermal image rather than a set of independently timed elements). This was a proposal on paper, not a second build.</p>
+      </div>
+    </section>
+
+    <section id="limits" class="case-section" aria-labelledby="limits-h">
+      <h2 id="limits-h">Limitations and scope</h2>
+      <div class="prose">
+        <ul>
+          <li>This was a prototype built under supervision on a defence project. Photographs, schematics, dimensions, the channel count and any measured figures cannot be published, which is why the only visual on this page is a conceptual diagram.</li>
+          <li>The scalability analysis was a draft; the larger grid was not built.</li>
+          <li>The internship lasted one month (January 2026), so the depth is that of a focused first hardware project, not a completed product.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="links" class="case-section" aria-labelledby="links-h">
+      <h2 id="links-h">Related work</h2>
+      <ul class="related" role="list">
+        <li><a href="../../#experience"><span class="kind">Experience</span><span class="name">Leapedge Aerospace and Defense Technologies, January 2026</span></a></li>
+        <li><a href="../../work/battery-characterization-suite/"><span class="kind">Case study</span><span class="name">Battery Characterization Suite</span></a></li>
+      </ul>
+    </section>
+
+  </div>
+</div>
+
+</main>
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-col">
+      <p class="footer-name">Paarth Patodia</p>
+      <p class="footer-line">B.S. Electrical Engineering, UMass Amherst, expected May 2028. Seeking a Summer 2027 engineering internship.</p>
+    </div>
+    <ul class="footer-links" role="list">
+      <li><a href="mailto:paarth.patodia@gmail.com">paarth.patodia@gmail.com</a></li>
+      <li><a href="https://github.com/PaarthPatodia" rel="me">github.com/PaarthPatodia</a></li>
+      <li><a href="../../assets/Paarth_Patodia_Resume.pdf" download>Résumé (PDF)</a></li>
+    </ul>
+    <p class="footer-note">Every claim on this site comes from my CV and the two public repositories. Battery figures are outputs of the open-source toolkit on a synthetic cell, not measurements of a real cell. Static HTML, no analytics, no trackers.</p>
+  </div>
+</footer>
+<script src="../../js/site.js" defer></script>
+
+</body>
+</html>

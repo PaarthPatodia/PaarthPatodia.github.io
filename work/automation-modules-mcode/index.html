@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Automation modules at MCode, a case study by Paarth Patodia</title>
+<meta name="description" content="Modules developed and tested inside four client AI-automation engagements as an AI developer intern at MCode: n8n orchestration and data-processing flows, structured-output validation with retry and exception paths, and API integrations.">
+<meta name="author" content="Paarth Patodia">
+<meta name="theme-color" content="#F4F4F1">
+<meta name="color-scheme" content="light">
+<link rel="canonical" href="https://paarthpatodia.github.io/work/automation-modules-mcode/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Paarth Patodia">
+<meta property="og:title" content="Automation modules at MCode">
+<meta property="og:description" content="Modules developed and tested inside four client AI-automation engagements as an AI developer intern at MCode: n8n orchestration and data-processing flows, structured-output validation with retry and exception paths, and API integrations.">
+<meta property="og:url" content="https://paarthpatodia.github.io/work/automation-modules-mcode/">
+<meta property="og:image" content="https://paarthpatodia.github.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Paarth Patodia, electrical engineering student at UMass Amherst: battery analysis tools and embedded systems.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23F4F4F1'/%3E%3Cpath d='M4 11h5l2 12 4-7 5-3 6-1' fill='none' stroke='%2317191D' stroke-width='2.2' stroke-linejoin='round' stroke-linecap='round'/%3E%3Ccircle cx='26' cy='12' r='3.4' fill='%230B6E55'/%3E%3C/svg%3E">
+<link rel="preload" href="../../assets/fonts/bricolage-grotesque-200-800-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../assets/fonts/ibm-plex-mono-400-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/site.css">
+<script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#B9BDB6" stroke-width="1"/>
+    </pattern>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0.5 L9.5 5 L0 9.5 z" fill="#17191D"/>
+    </marker>
+    <marker id="arrowhead-soft" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0.5 L9.5 5 L0 9.5 z" fill="#6B727A"/>
+    </marker>
+  </defs>
+</svg>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../../" aria-label="Paarth Patodia, home">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="26" height="26" aria-hidden="true" focusable="false"><path d="M3 11h5l2 12 4-7 5-3 7-1" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="27" cy="12" r="3.4" fill="#0B6E55"/></svg>
+      <span>Paarth Patodia</span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu" hidden>
+      <span class="menu-toggle-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="menu-toggle-label">Menu</span>
+    </button>
+    <nav id="site-menu" class="menu" aria-label="Site">
+      <ul class="menu-list" role="list">
+        <li><a href="../../#work" aria-current="page">Work</a></li>
+        <li><a href="../../#experience">Experience</a></li>
+        <li><a href="../../#about">About</a></li>
+        <li><a href="../../#contact">Contact</a></li>
+      </ul>
+      <a class="btn btn-primary btn-small menu-resume" href="../../assets/Paarth_Patodia_Resume.pdf" download>Résumé (PDF)</a>
+    </nav>
+  </div>
+</header>
+
+
+<main id="main">
+
+<header class="case-head container">
+  <ol class="crumbs" role="list"><li><a href="../../">Home</a></li><li><a href="../../#work">Work</a></li><li>Automation modules at MCode</li></ol>
+  <h1>Automation modules at MCode</h1>
+  <p class="standfirst">Components I developed and tested inside four client engagements that connected language models to enterprise data, APIs and operational systems. One engagement is described in detail; the other three are summarised.</p>
+  <dl class="case-meta">
+    <div><dt>Role</dt><dd>AI Developer Intern. Module-level builder within platforms owned, architected and delivered by the MCode team.</dd></div>
+    <div><dt>Dates</dt><dd>February to May 2026, India.</dd></div>
+    <div><dt>Tools</dt><dd>Python, Claude, n8n, MCP, REST APIs and webhooks, WhatsApp Business API, speech-to-text, JSON schema validation, Google Sheets, Git</dd></div>
+    <div><dt>What can be shown</dt><dd>Text and an illustrative diagram only. Client code, configurations, screenshots and data cannot be published.</dd></div>
+  </dl>
+</header>
+
+<div class="container">
+  <section class="key-result" aria-labelledby="kr-h">
+    <h2 id="kr-h">Scope, stated first</h2>
+    <div class="kr-text">
+      <p>All four engagements were owned by the broader MCode team. I built, tested and improved individual modules inside them. I did not architect or deliver any client solution end to end, and where an outcome figure appears on this page it was reported at project level by the team or the client, not designed or measured by me.</p>
+    </div>
+    <div class="kr-table">
+      <dl class="work-facts">
+        <div><dt>The team owned</dt><dd>Client relationships, solution architecture, the ERP and CRM integrations, deployment and measurement.</dd></div>
+        <div><dt>I built and tested</dt><dd>n8n orchestration and data-processing flows; structured-output schemas with programmatic validation, retry and exception paths; API error handling, monitoring and test cases; specific API integrations within team-designed workflows.</dd></div>
+        <div><dt>Reported outcomes</dt><dd>Two engagements have figures reported by the project team for the deployment as a whole. They are quoted below with that attribution.</dd></div>
+      </dl>
+    </div>
+  </section>
+</div>
+
+<div class="container case-body">
+  <nav class="case-toc" aria-label="On this page">
+    <h2>On this page</h2>
+    <ol role="list">
+      <li><a href="#shape">The shared shape</a></li>
+      <li><a href="#subros">In detail: manufacturing intelligence agent</a></li>
+      <li><a href="#others">The other three engagements</a></li>
+      <li><a href="#decisions">Engineering decisions</a></li>
+      <li><a href="#validation">Validation</a></li>
+      <li><a href="#limits">Limitations and scope</a></li>
+      <li><a href="#links">Related work</a></li>
+    </ol>
+  </nav>
+
+  <div class="case-main">
+
+    <section id="shape" class="case-section" aria-labelledby="shape-h">
+      <h2 id="shape-h">The shared shape</h2>
+      <div class="prose">
+        <p>Across the four engagements the recurring piece was the same: connect a model to enterprise data or an operational channel through n8n, normalise what comes in, validate what comes out, and route the result somewhere a team already looks. Reusable structured-output validation, API error handling, workflow monitoring and test cases sat under all of it, so malformed model or external-service responses were rejected rather than passed downstream.</p>
+      </div>
+      <figure class="figure">
+        <svg class="diagram diagram-flow" viewBox="0 0 900 250" role="img" aria-labelledby="wf-title wf-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="wf-title">Illustrative shape of the workflow modules I built at MCode</title>
+<desc id="wf-desc">A left-to-right chain of nodes: a trigger (webhook or schedule) receives an input; a normalise step cleans it into a fixed record; a route step branches by query type or failure; an HTTP request step calls an internal service or a model endpoint; a validate step checks the structured output against a schema and retries or raises an exception on failure; a deliver step routes the result to an existing channel. My modules are outlined in green; the surrounding platform, owned by the team, is shown as a soft background. This is an illustrative shape, not a client configuration.</desc>
+<rect class="box-soft" x="16" y="20" width="868" height="170"/>
+<text class="tag" x="28" y="42">Team-owned platform: client systems, data sources, delivery channels</text>
+<!-- nodes -->
+<rect class="box" x="36" y="80" width="122" height="64"/>
+<text class="lbl" x="97" y="108" text-anchor="middle">Trigger</text>
+<text class="sub" x="97" y="128" text-anchor="middle">webhook / schedule</text>
+<path class="arrow" d="M158 112 H180"/>
+<rect class="box box-mine" x="184" y="80" width="122" height="64"/>
+<text class="lbl" x="245" y="108" text-anchor="middle">Normalise</text>
+<text class="sub" x="245" y="128" text-anchor="middle">Code node</text>
+<path class="arrow" d="M306 112 H328"/>
+<rect class="box box-mine" x="332" y="80" width="122" height="64"/>
+<text class="lbl" x="393" y="108" text-anchor="middle">Route</text>
+<text class="sub" x="393" y="128" text-anchor="middle">Switch / IF</text>
+<path class="arrow" d="M454 112 H476"/>
+<rect class="box box-mine" x="480" y="80" width="122" height="64"/>
+<text class="lbl" x="541" y="108" text-anchor="middle">Request</text>
+<text class="sub" x="541" y="128" text-anchor="middle">service / model API</text>
+<path class="arrow" d="M602 112 H624"/>
+<rect class="box box-mine" x="628" y="80" width="122" height="64"/>
+<text class="lbl" x="689" y="108" text-anchor="middle">Validate</text>
+<text class="sub" x="689" y="128" text-anchor="middle">schema, retry, except</text>
+<path class="arrow" d="M750 112 H772"/>
+<rect class="box" x="776" y="80" width="96" height="64"/>
+<text class="lbl" x="824" y="108" text-anchor="middle">Deliver</text>
+<text class="sub" x="824" y="128" text-anchor="middle">existing channel</text>
+<!-- retry loop -->
+<path class="arrow-soft" d="M689 144 V166 H541 V146"/>
+<text class="tag" x="615" y="180" text-anchor="middle">retry on malformed output</text>
+<!-- legend -->
+<rect class="box box-mine" x="16" y="212" width="22" height="14"/>
+<text class="sub" x="46" y="224">modules I built and tested</text>
+<rect class="box" x="230" y="212" width="22" height="14"/>
+<text class="sub" x="260" y="224">team- or client-owned nodes</text>
+<text class="tag" x="884" y="224" text-anchor="end">Illustrative only; no client configuration shown.</text>
+</svg>
+        <figcaption class="caption"><span class="fignum">Fig. 1.</span> <span class="what">The shape shared by the modules I built: a trigger, a normalise step, routing, a request to a service or model endpoint, validation of the structured output with a retry path, and delivery to an existing channel. Green outlines mark the node types I built and tested.</span> <span class="conditions">An illustrative diagram drawn for this page. It is not a client workflow and reveals no client configuration, data or code.</span></figcaption>
+      </figure>
+    </section>
+
+    <section id="subros" class="case-section" aria-labelledby="subros-h">
+      <h2 id="subros-h">In detail: a natural-language manufacturing intelligence agent</h2>
+      <div class="prose">
+        <p><strong>Client and purpose.</strong> Subros Limited, a manufacturer. Plant teams wanted to ask questions about production and quality in plain language instead of raising manual MIS requests, and to receive shift-level reports without assembling them by hand.</p>
+        <p><strong>What I built.</strong> The n8n orchestration and data-processing layer of the agent: a webhook trigger that receives the query; Code nodes that normalise the request and validate the model's response; Switch and IF nodes that route by query type and on failure; and HTTP Request nodes that call internal services and model endpoints. The data the workflow operated on was ERP-derived (SAP-sourced) production and quality data exposed to it by the platform. I also developed workflow components for automated shift-level production and quality reporting, which transformed that data into structured summaries and routed them to engineering and operations teams through existing enterprise channels.</p>
+        <p><strong>What I did not build.</strong> The SAP connector, the SAP-side MCP server and the ERP integration were the team's. I consumed ERP-derived data exposed to my workflow; I did not configure SAP, write ABAP, or have unrestricted SAP access. SAP is not a skill I claim.</p>
+      </div>
+      <p class="callout"><strong>Reported outcome.</strong> The project team reported that the deployment cut recurring operational query turnaround from up to one working day to seconds across three departments. That figure was reported at the overall project level by the team and client; I contributed modules to the deployment and did not design or measure the figure.</p>
+    </section>
+
+    <section id="others" class="case-section" aria-labelledby="others-h">
+      <h2 id="others-h">The other three engagements</h2>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <caption>Module-level contributions. "Reported outcome" figures were reported at project level by the team or client for the deployment as a whole; I did not design or measure them.</caption>
+          <thead><tr><th scope="col">Engagement</th><th scope="col">What I developed components of</th><th scope="col">Reported outcome</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="rowhead">420 Papad / Agrawal Snacks</td>
+              <td>The n8n automation and processing flow of a Hindi voice-first factory operations system. Shop-floor voice messages arrive through the WhatsApp Business API; the audio is passed to a speech-to-text service; the transcript is converted into a fixed ticket schema (machine, complaint category, severity, department, description) and logged to the operations tracker for downstream routing. Operators report equipment issues in natural speech without adopting new software; management gets trackable records.</td>
+              <td>No figure reported.</td>
+            </tr>
+            <tr>
+              <td class="rowhead">Blotato</td>
+              <td>Components of a multi-agent content pipeline (Claude, MCP, n8n, Blotato API) that turns one source input into channel-specific content and schedules multi-platform publishing. Separately, a scheduled closed-loop analytics workflow that retrieves post performance through platform APIs, normalises it into structured records (platform, post ID, content variant, impressions, engagement rate, collection timestamp), and injects a compact summary of higher-performing hooks and formats into the context of the next generation run. That is prompt-context feedback, not model retraining.</td>
+              <td>No figure reported.</td>
+            </tr>
+            <tr>
+              <td class="rowhead">Calibery</td>
+              <td>Extraction components of a resume screening and candidate-matching pipeline: the expected output schema (skills, experience, education, certifications) and programmatic validation with retry and exception paths so malformed, incomplete or type-invalid model responses were rejected rather than passed downstream. API integrations for candidate sourcing, CRM and scheduling to automate profile ingestion, shortlisting and interview coordination.</td>
+              <td>The project team reported a 60 % reduction in time-to-hire and 20+ recruiter hours saved per week for the broader deployment.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="decisions" class="case-section" aria-labelledby="decisions-h">
+      <h2 id="decisions-h">Engineering decisions</h2>
+      <div class="prose">
+        <h3>Structured output is enforced, not requested</h3>
+        <p>Asking a model to "return JSON" is not validation. Each extraction module defined a field schema and checked every response against it programmatically: type, presence and range. A response that failed went down a retry path with the failure described; a response that failed again raised an exception into monitoring rather than passing partial data downstream. This is the single pattern that most reduced silent failures.</p>
+        <h3>Normalise at the edge</h3>
+        <p>Incoming data (a plain-language query, a voice transcript, a platform's analytics payload) was normalised into a fixed record as the first step, so every downstream node saw one shape. Routing decisions were then made on that record, not on raw input.</p>
+        <h3>Feedback through context, not training</h3>
+        <p>For the content pipeline, "learning from performance" meant retrieving metrics, normalising them, and injecting a compact summary of what performed well into the next generation prompt. It was deliberately not fine-tuning or online learning, and it is described that way.</p>
+        <h3>Deliver where people already look</h3>
+        <p>Outputs were routed into channels teams already used (enterprise messaging, an operations tracker, existing reporting lines) rather than into a new interface, which is why a voice message on WhatsApp could become a structured ticket without the operator changing anything.</p>
+      </div>
+    </section>
+
+    <section id="validation" class="case-section" aria-labelledby="validation-h">
+      <h2 id="validation-h">Validation</h2>
+      <div class="prose">
+        <p>At module level: test cases for the validation and error-handling paths (well-formed, malformed, incomplete and type-invalid responses; API errors and timeouts), and workflow monitoring so failures surfaced rather than vanished. Deployment-level outcomes were measured by the project team and client, and are quoted above with that attribution.</p>
+      </div>
+    </section>
+
+    <section id="limits" class="case-section" aria-labelledby="limits-h">
+      <h2 id="limits-h">Limitations and scope</h2>
+      <div class="prose">
+        <ul>
+          <li>Module-level work inside team-owned architectures. I have not designed a client agent system end to end.</li>
+          <li>Client code, configurations, screenshots and data cannot be published, so this page is text and one illustrative diagram.</li>
+          <li>The two outcome figures are the team's and the clients', reported for whole deployments. They are not measurements of my modules in isolation.</li>
+          <li>For the voice-first system I can describe the flow I built; I do not state the transcription provider or the exact escalation rule, which were not mine to decide.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="links" class="case-section" aria-labelledby="links-h">
+      <h2 id="links-h">Related work</h2>
+      <ul class="related" role="list">
+        <li><a href="../../#experience"><span class="kind">Experience</span><span class="name">MCode, AI Developer Intern, February to May 2026</span></a></li>
+        <li><a href="../../work/battery-characterization-suite/"><span class="kind">Case study</span><span class="name">Battery Characterization Suite: structured data contracts between analysis backends</span></a></li>
+      </ul>
+    </section>
+
+  </div>
+</div>
+
+</main>
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-col">
+      <p class="footer-name">Paarth Patodia</p>
+      <p class="footer-line">B.S. Electrical Engineering, UMass Amherst, expected May 2028. Seeking a Summer 2027 engineering internship.</p>
+    </div>
+    <ul class="footer-links" role="list">
+      <li><a href="mailto:paarth.patodia@gmail.com">paarth.patodia@gmail.com</a></li>
+      <li><a href="https://github.com/PaarthPatodia" rel="me">github.com/PaarthPatodia</a></li>
+      <li><a href="../../assets/Paarth_Patodia_Resume.pdf" download>Résumé (PDF)</a></li>
+    </ul>
+    <p class="footer-note">Every claim on this site comes from my CV and the two public repositories. Battery figures are outputs of the open-source toolkit on a synthetic cell, not measurements of a real cell. Static HTML, no analytics, no trackers.</p>
+  </div>
+</footer>
+<script src="../../js/site.js" defer></script>
+
+</body>
+</html>
