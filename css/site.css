@@ -256,6 +256,7 @@ a:hover { color: var(--accent-deep); text-decoration-color: currentColor; }
 /* ---------- About & capabilities ---------- */
 .about-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: var(--sp-7); }
 .about-intro { grid-column: 1 / span 5; }
+.about-intro .portrait { display: block; width: 200px; max-width: 60%; height: auto; margin-bottom: var(--sp-5); background: #fff; border: 1px solid var(--rule); border-radius: var(--radius-lg); }
 .about-intro p + p { margin-top: var(--sp-4); }
 .about-intro .edu { margin-top: var(--sp-6); padding-top: var(--sp-5); border-top: 1px solid var(--rule); }
 .about-intro .edu h3 { font-size: var(--t-17); margin-bottom: var(--sp-3); }
@@ -370,6 +371,7 @@ details.more .prose { font-size: 1rem; }
 /* ---------- Figures ---------- */
 .figure { margin: 0; }
 .figure .fig, .figure img { display: block; width: 100%; height: auto; background: var(--panel); border: 1px solid var(--rule); border-radius: var(--radius); }
+.diagram-link { display: block; cursor: zoom-in; }
 .figure .caption { margin-top: var(--sp-3); }
 .caption { font-family: var(--sans); font-size: var(--t-14); line-height: 1.5; color: var(--ink-2); max-width: 70ch; }
 .caption .fignum { font-weight: 600; color: var(--ink); }

@@ -116,46 +116,13 @@
         <p>Across the four engagements the recurring piece was the same: connect a model to enterprise data or an operational channel through n8n, normalise what comes in, validate what comes out, and route the result somewhere a team already looks. Reusable structured-output validation, API error handling, workflow monitoring and test cases sat under all of it, so malformed model or external-service responses were rejected rather than passed downstream.</p>
       </div>
       <figure class="figure">
-        <svg class="diagram diagram-flow" viewBox="0 0 900 250" role="img" aria-labelledby="wf-title wf-desc" xmlns="http://www.w3.org/2000/svg">
-<title id="wf-title">Illustrative shape of the workflow modules I built at MCode</title>
-<desc id="wf-desc">A left-to-right chain of nodes: a trigger (webhook or schedule) receives an input; a normalise step cleans it into a fixed record; a route step branches by query type or failure; an HTTP request step calls an internal service or a model endpoint; a validate step checks the structured output against a schema and retries or raises an exception on failure; a deliver step routes the result to an existing channel. My modules are outlined in green; the surrounding platform, owned by the team, is shown as a soft background. This is an illustrative shape, not a client configuration.</desc>
-<rect class="box-soft" x="16" y="20" width="868" height="170"/>
-<text class="tag" x="28" y="42">Team-owned platform: client systems, data sources, delivery channels</text>
-<!-- nodes -->
-<rect class="box" x="36" y="80" width="122" height="64"/>
-<text class="lbl" x="97" y="108" text-anchor="middle">Trigger</text>
-<text class="sub" x="97" y="128" text-anchor="middle">webhook / schedule</text>
-<path class="arrow" d="M158 112 H180"/>
-<rect class="box box-mine" x="184" y="80" width="122" height="64"/>
-<text class="lbl" x="245" y="108" text-anchor="middle">Normalise</text>
-<text class="sub" x="245" y="128" text-anchor="middle">Code node</text>
-<path class="arrow" d="M306 112 H328"/>
-<rect class="box box-mine" x="332" y="80" width="122" height="64"/>
-<text class="lbl" x="393" y="108" text-anchor="middle">Route</text>
-<text class="sub" x="393" y="128" text-anchor="middle">Switch / IF</text>
-<path class="arrow" d="M454 112 H476"/>
-<rect class="box box-mine" x="480" y="80" width="122" height="64"/>
-<text class="lbl" x="541" y="108" text-anchor="middle">Request</text>
-<text class="sub" x="541" y="128" text-anchor="middle">service / model API</text>
-<path class="arrow" d="M602 112 H624"/>
-<rect class="box box-mine" x="628" y="80" width="122" height="64"/>
-<text class="lbl" x="689" y="108" text-anchor="middle">Validate</text>
-<text class="sub" x="689" y="128" text-anchor="middle">schema, retry, except</text>
-<path class="arrow" d="M750 112 H772"/>
-<rect class="box" x="776" y="80" width="96" height="64"/>
-<text class="lbl" x="824" y="108" text-anchor="middle">Deliver</text>
-<text class="sub" x="824" y="128" text-anchor="middle">existing channel</text>
-<!-- retry loop -->
-<path class="arrow-soft" d="M689 144 V166 H541 V146"/>
-<text class="tag" x="615" y="180" text-anchor="middle">retry on malformed output</text>
-<!-- legend -->
-<rect class="box box-mine" x="16" y="212" width="22" height="14"/>
-<text class="sub" x="46" y="224">modules I built and tested</text>
-<rect class="box" x="230" y="212" width="22" height="14"/>
-<text class="sub" x="260" y="224">team- or client-owned nodes</text>
-<text class="tag" x="884" y="224" text-anchor="end">Illustrative only; no client configuration shown.</text>
-</svg>
-        <figcaption class="caption"><span class="fignum">Fig. 1.</span> <span class="what">The shape shared by the modules I built: a trigger, a normalise step, routing, a request to a service or model endpoint, validation of the structured output with a retry path, and delivery to an existing channel. Green outlines mark the node types I built and tested.</span> <span class="conditions">An illustrative diagram drawn for this page. It is not a client workflow and reveals no client configuration, data or code.</span></figcaption>
+        <a class="diagram-link" href="../../assets/diagrams/workflow-modules-1920.jpg" aria-label="Open the diagram at full size">
+<picture>
+          <source type="image/webp" srcset="../../assets/diagrams/workflow-modules-960.webp 960w, ../../assets/diagrams/workflow-modules-1920.webp 1920w" sizes="(max-width: 1240px) 100vw, 1100px">
+          <img class="diagram-img" src="../../assets/diagrams/workflow-modules-1920.jpg" srcset="../../assets/diagrams/workflow-modules-960.jpg 960w, ../../assets/diagrams/workflow-modules-1920.jpg 1920w" sizes="(max-width: 1240px) 100vw, 1100px" width="1920" height="1072" alt="Illustrative shape of the workflow modules I built at MCode. A left-to-right chain of nodes: a trigger (webhook or schedule) receives an input; a normalise step cleans it into a fixed record; a route step branches by query type or failure; an HTTP request step calls an internal service or a model endpoint; a validate step checks the structured output against a schema and retries or raises an exception on failure; a deliver step routes the result to an existing channel. My modules are outlined in green; the surrounding platform, owned by the team, is shown as a soft background. This is an illustrative shape, not a client configuration." loading="lazy" decoding="async">
+        </picture>
+        </a>
+        <figcaption class="caption"><span class="fignum">Fig. 1.</span> <span class="what">The shape shared by the modules I built: a trigger, a normalise step, routing, a request to a service or model endpoint, validation of the structured output with a retry path, and delivery to an existing channel. Green outlines mark the node types I built and tested.</span></figcaption>
       </figure>
     </section>
 

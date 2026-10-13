@@ -143,42 +143,12 @@
     <section id="decisions" class="case-section" aria-labelledby="decisions-h">
       <h2 id="decisions-h">Engineering decisions</h2>
       <figure class="figure">
-        <svg class="diagram diagram-crawl" viewBox="0 0 900 300" role="img" aria-labelledby="crawl-title crawl-desc" xmlns="http://www.w3.org/2000/svg">
-<title id="crawl-title">The crawler searches a graph of UI states, not the DOM tree</title>
-<desc id="crawl-desc">A root node, the page as loaded, has three edges, each a click on a trigger: one opens a modal, one switches a tab, one opens a menu. Each of those child states contains controls that were not in the DOM before the click. A dashed edge from the modal back to the root shows the cycle a repeated click would create; the per-trigger visit set breaks it. A depth cap, a per-element identity set and a global element budget are listed as the other three termination bounds.</desc>
-<!-- root -->
-<rect class="box" x="30" y="112" width="170" height="76"/>
-<text class="lbl" x="115" y="142" text-anchor="middle">Page as loaded</text>
-<text class="sub" x="115" y="162" text-anchor="middle">depth 0</text>
-<!-- edges -->
-<path class="arrow" d="M200 132 C 260 132, 270 60, 330 60"/>
-<path class="arrow" d="M200 150 H330"/>
-<path class="arrow" d="M200 168 C 260 168, 270 240, 330 240"/>
-<text class="tag" x="262" y="48" text-anchor="middle">click "Add contact"</text>
-<text class="tag" x="265" y="140" text-anchor="middle">click "Billing"</text>
-<text class="tag" x="262" y="262" text-anchor="middle">click "More"</text>
-<!-- children -->
-<rect class="box box-accent" x="334" y="26" width="200" height="68"/>
-<text class="lbl" x="434" y="52" text-anchor="middle">modal: Add contact</text>
-<text class="sub" x="434" y="72" text-anchor="middle">inputs, select, save, cancel</text>
-<rect class="box box-accent" x="334" y="116" width="200" height="68"/>
-<text class="lbl" x="434" y="142" text-anchor="middle">tab: Billing</text>
-<text class="sub" x="434" y="162" text-anchor="middle">currency, email, update</text>
-<rect class="box box-accent" x="334" y="206" width="200" height="68"/>
-<text class="lbl" x="434" y="232" text-anchor="middle">menu: More</text>
-<text class="sub" x="434" y="252" text-anchor="middle">three menu items</text>
-<text class="tag" x="434" y="12" text-anchor="middle">depth 1: controls a flat scan never sees</text>
-<!-- cycle -->
-<path class="arrow-soft" d="M534 60 C 600 60, 600 120, 560 150 C 520 180, 300 200, 200 176"/>
-<text class="tag" x="640" y="120">a repeated trigger would loop;</text>
-<text class="tag" x="640" y="138">the per-trigger visit set stops it</text>
-<!-- bounds -->
-<rect class="box-soft" x="600" y="170" width="284" height="110"/>
-<text class="lbl" x="616" y="196">Four independent termination bounds</text>
-<text class="sub" x="616" y="218">1. depth cap        2. per-trigger visit set</text>
-<text class="sub" x="616" y="238">3. per-element identity set</text>
-<text class="sub" x="616" y="258">4. global element budget (hard stop)</text>
-</svg>
+        <a class="diagram-link" href="../../assets/diagrams/ui-state-crawl-1920.jpg" aria-label="Open the diagram at full size">
+<picture>
+          <source type="image/webp" srcset="../../assets/diagrams/ui-state-crawl-960.webp 960w, ../../assets/diagrams/ui-state-crawl-1920.webp 1920w" sizes="(max-width: 1240px) 100vw, 1100px">
+          <img class="diagram-img" src="../../assets/diagrams/ui-state-crawl-1920.jpg" srcset="../../assets/diagrams/ui-state-crawl-960.jpg 960w, ../../assets/diagrams/ui-state-crawl-1920.jpg 1920w" sizes="(max-width: 1240px) 100vw, 1100px" width="1920" height="1072" alt="The crawler searches a graph of UI states, not the DOM tree. A root node, the page as loaded, has three edges, each a click on a trigger: one opens a modal, one switches a tab, one opens a menu. Each of those child states contains controls that were not in the DOM before the click. A dashed edge from the modal back to the root shows the cycle a repeated click would create; the per-trigger visit set breaks it. A depth cap, a per-element identity set and a global element budget are listed as the other three termination bounds." loading="lazy" decoding="async">
+        </picture>
+        </a>
         <figcaption class="caption"><span class="fignum">Fig. 1.</span> <span class="what">The crawler searches the graph of UI states, not the DOM tree: nodes are page states, edges are clicks. The states shown are the ones the demonstration run visited.</span></figcaption>
       </figure>
       <div class="prose">

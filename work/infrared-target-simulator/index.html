@@ -123,52 +123,13 @@
     <section id="built" class="case-section" aria-labelledby="built-h">
       <h2 id="built-h">What I built</h2>
       <figure class="figure">
-        <svg class="diagram diagram-ir" viewBox="0 0 900 330" role="img" aria-labelledby="ir-title ir-desc" xmlns="http://www.w3.org/2000/svg">
-<title id="ir-title">Conceptual signal chain of the infrared target simulator prototype</title>
-<desc id="ir-desc">Left to right: a heating pattern is programmed into Arduino firmware, which drives one PWM output per channel; each PWM line switches a MOSFET driver stage, and each driver stage powers one resistive heater element in an array. A FLIR thermal camera views the array, and the captured thermal image is compared against the programmed pattern to validate the prototype. This is a conceptual diagram, not a schematic or photograph of the hardware.</desc>
-<!-- Arduino -->
-<rect class="box" x="24" y="96" width="176" height="112"/>
-<text class="lbl" x="112" y="128" text-anchor="middle">Arduino firmware</text>
-<text class="sub" x="112" y="150" text-anchor="middle">heating pattern table</text>
-<text class="sub" x="112" y="168" text-anchor="middle">per-channel PWM duty</text>
-<text class="tag tag-accent" x="112" y="194" text-anchor="middle">my firmware</text>
-<!-- PWM lines -->
-<path class="arrow" d="M200 124 H258"/>
-<path class="arrow" d="M200 152 H258"/>
-<path class="arrow" d="M200 180 H258"/>
-<text class="tag" x="229" y="112" text-anchor="middle">PWM</text>
-<!-- MOSFET drivers -->
-<rect class="box" x="262" y="96" width="176" height="112"/>
-<text class="lbl" x="350" y="128" text-anchor="middle">MOSFET drivers</text>
-<text class="sub" x="350" y="150" text-anchor="middle">one switched channel</text>
-<text class="sub" x="350" y="168" text-anchor="middle">per heater element</text>
-<text class="tag tag-accent" x="350" y="194" text-anchor="middle">assembled and tested</text>
-<!-- power lines to array -->
-<path class="arrow" d="M438 124 H496"/>
-<path class="arrow" d="M438 152 H496"/>
-<path class="arrow" d="M438 180 H496"/>
-<text class="tag" x="467" y="112" text-anchor="middle">current</text>
-<!-- heater array: an unspecified grid, some elements on -->
-<rect class="box" x="500" y="60" width="176" height="184"/>
-<text class="lbl" x="588" y="86" text-anchor="middle">Resistive heater array</text>
-<g transform="translate(524 100)">
-  <rect class="heat" x="0" y="0" width="28" height="28"/><rect class="heat-on heat" x="34" y="0" width="28" height="28"/><rect class="heat-on heat" x="68" y="0" width="28" height="28"/><rect class="heat" x="102" y="0" width="28" height="28"/>
-  <rect class="heat-warm heat" x="0" y="34" width="28" height="28"/><rect class="heat-on heat" x="34" y="34" width="28" height="28"/><rect class="heat-on heat" x="68" y="34" width="28" height="28"/><rect class="heat-warm heat" x="102" y="34" width="28" height="28"/>
-  <rect class="heat" x="0" y="68" width="28" height="28"/><rect class="heat-warm heat" x="34" y="68" width="28" height="28"/><rect class="heat-warm heat" x="68" y="68" width="28" height="28"/><rect class="heat" x="102" y="68" width="28" height="28"/>
-</g>
-<text class="sub" x="588" y="226" text-anchor="middle">programmed pattern</text>
-<!-- camera -->
-<path class="arrow-soft" d="M676 152 H734"/>
-<text class="tag" x="705" y="140" text-anchor="middle">infrared</text>
-<rect class="box" x="738" y="112" width="138" height="80"/>
-<text class="lbl" x="807" y="146" text-anchor="middle">FLIR camera</text>
-<text class="sub" x="807" y="168" text-anchor="middle">thermal image</text>
-<!-- validation loop -->
-<path class="arrow" d="M807 192 V276 H112 V212"/>
-<text class="sub" x="460" y="268" text-anchor="middle">validation: captured thermal output compared against the programmed state</text>
-<text class="tag" x="24" y="318">Conceptual diagram; channel count, array size and geometry are not shown.</text>
-</svg>
-        <figcaption class="caption"><span class="fignum">Fig. 1.</span> <span class="what">Conceptual signal chain of the prototype: firmware sets a PWM duty per channel; each PWM line switches a MOSFET driver; each driver powers one heater element; the FLIR camera views the array and its image is compared with the programmed pattern.</span> <span class="conditions">A conceptual diagram drawn for this page. It is not a schematic, and it does not show the real channel count, array dimensions or layout.</span></figcaption>
+        <a class="diagram-link" href="../../assets/diagrams/infrared-signal-chain-1920.jpg" aria-label="Open the diagram at full size">
+<picture>
+          <source type="image/webp" srcset="../../assets/diagrams/infrared-signal-chain-960.webp 960w, ../../assets/diagrams/infrared-signal-chain-1920.webp 1920w" sizes="(max-width: 1240px) 100vw, 1100px">
+          <img class="diagram-img" src="../../assets/diagrams/infrared-signal-chain-1920.jpg" srcset="../../assets/diagrams/infrared-signal-chain-960.jpg 960w, ../../assets/diagrams/infrared-signal-chain-1920.jpg 1920w" sizes="(max-width: 1240px) 100vw, 1100px" width="1920" height="1072" alt="Conceptual signal chain of the infrared target simulator prototype. Left to right: a heating pattern is programmed into Arduino firmware, which drives one PWM output per channel; each PWM line switches a MOSFET driver stage, and each driver stage powers one resistive heater element in an array. A FLIR thermal camera views the array, and the captured thermal image is compared against the programmed pattern to validate the prototype. This is a conceptual diagram, not a schematic or photograph of the hardware." loading="lazy" decoding="async">
+        </picture>
+        </a>
+        <figcaption class="caption"><span class="fignum">Fig. 1.</span> <span class="what">Conceptual signal chain of the prototype: firmware sets a PWM duty per channel; each PWM line switches a MOSFET driver; each driver powers one heater element; the FLIR camera views the array and its image is compared with the programmed pattern.</span></figcaption>
       </figure>
       <div class="prose">
         <ul>

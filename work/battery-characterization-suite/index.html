@@ -225,7 +225,7 @@
       </div>
       <figure class="figure">
         <img src="../../assets/figures/streamlit-hub-hml.png" width="1440" height="900" loading="lazy" decoding="async" alt="The toolkit's Streamlit hub with the HML sample procedure loaded. A sidebar holds the DOE source, cell capacity and starting SOC controls. The main pane shows summary figures (50 h duration, 78 steps executed, 38 unique steps, 115 Ah discharged) above two stacked plots: current against time, with repeated pulse blocks marked times three, and state of charge stepping down from 100 percent to about 50 percent in six intervals.">
-        <figcaption class="caption"><span class="fignum">Fig. 2.</span> <span class="what">The Streamlit hub with the HML sample procedure loaded: the DOE parsed into a current waveform and the resulting state-of-charge staircase.</span> <span class="conditions">Screenshot of the actual interface running locally on the generated sample data.</span></figcaption>
+        <figcaption class="caption"><span class="fignum">Fig. 2.</span> <span class="what">The Streamlit hub with the HML sample procedure loaded: the DOE parsed into a current waveform and the resulting state-of-charge staircase.</span></figcaption>
       </figure>
       <figure class="figure">
         <svg class="fig fig-ecm" viewBox="0 0 960 340" role="img" aria-labelledby="ecm-title ecm-desc" xmlns="http://www.w3.org/2000/svg">
@@ -273,7 +273,7 @@
 <circle class="marker ocv" style="--i:2" cx="566.25" cy="101.25" r="5"/>
 <circle class="marker ocv" style="--i:3" cx="921.99" cy="116.32" r="5"/>
 </svg>
-        <figcaption class="caption"><span class="fignum">Fig. 3.</span> <span class="what">Terminal voltage segmented by the estimator into discharge pulses (shaded), a charge pulse (hatched) and rests, with the open-circuit voltage read at the end of each rest (dots).</span> <span class="conditions">Synthetic cell, <code>parameter_estimation</code> output, redrawn from the repository figure; <a href="../../assets/figures/ecm_segmentation.png">original PNG</a>.</span></figcaption>
+        <figcaption class="caption"><span class="fignum">Fig. 3.</span> <span class="what">Terminal voltage segmented by the estimator into discharge pulses (shaded), a charge pulse (hatched) and rests, with the open-circuit voltage read at the end of each rest (dots).</span></figcaption>
       </figure>
       <figure class="figure">
         <svg class="fig fig-ocv fig-ocv--wide" viewBox="0 0 1200 520" role="img" aria-labelledby="ocv-wide-title ocv-wide-desc" xmlns="http://www.w3.org/2000/svg">
@@ -363,7 +363,7 @@
 <path class="marker discharge" style="--i:51" d="M1001.75 89.43 L996.75 80.77 L1006.75 80.77 Z"/>
 <path class="marker discharge" style="--i:52" d="M1044.55 75.34 L1039.55 66.68 L1049.55 66.68 Z"/>
 </svg>
-        <figcaption class="caption"><span class="fignum">Fig. 4.</span> <span class="what">Open-circuit voltage against state of charge on the charge (green) and discharge (black) branches, read after 60-minute rests. The gap between the branches is the hysteresis. The protocol visits six set points and skips the band between 35 and 45 %, so nothing is drawn there.</span> <span class="conditions">Synthetic cell, <code>hml_analysis</code> output; <a href="../../assets/figures/hml_ocv_branches.png">original PNG</a>.</span></figcaption>
+        <figcaption class="caption"><span class="fignum">Fig. 4.</span> <span class="what">Open-circuit voltage against state of charge on the charge (green) and discharge (black) branches, read after 60-minute rests. The gap between the branches is the hysteresis. The protocol visits six set points and skips the band between 35 and 45 %, so nothing is drawn there.</span></figcaption>
       </figure>
       <figure class="figure">
         <svg class="fig fig-minor" viewBox="0 0 720 560" role="img" aria-labelledby="minor-title minor-desc" xmlns="http://www.w3.org/2000/svg">
@@ -410,8 +410,7 @@
 <circle class="marker entry" style="--i:9" cx="306.25" cy="351.53" r="6"/>
 </g>
 </svg>
-        <figcaption class="caption"><span class="fignum">Fig. 5.</span> <span class="what">One minor loop in detail, at the 55 % set point. Four matched charge and discharge pulse pairs step 2 % at a time; the charge-branch OCVs (3.7908 to 3.8711 V) sit 15.7 to 23.3 mV above the discharge-branch OCVs (3.7675 to 3.8554 V). The dashed line is the entry ramp that brought the cell to 55 %.</span> <span class="conditions">Synthetic cell, <code>hml_analysis</code> output; <a href="../../assets/figures/hml_minor_loop_55pct.png">original PNG</a>.</span>
-        <ul class="legend" role="list" aria-label="Legend"><li><i class="dashed"></i>Entry curve</li><li><i class="accent"></i>Charge branch and OCV</li><li><i></i>Discharge branch and OCV</li></ul></figcaption>
+        <figcaption class="caption"><span class="fignum">Fig. 5.</span> <span class="what">One minor loop in detail, at the 55 % set point. Four matched charge and discharge pulse pairs step 2 % at a time; the charge-branch OCVs (3.7908 to 3.8711 V) sit 15.7 to 23.3 mV above the discharge-branch OCVs (3.7675 to 3.8554 V). The dashed line is the entry ramp that brought the cell to 55 %.</span>        <ul class="legend" role="list" aria-label="Legend"><li><i class="dashed"></i>Entry curve</li><li><i class="accent"></i>Charge branch and OCV</li><li><i></i>Discharge branch and OCV</li></ul></figcaption>
       </figure>
 
       <div class="demo" id="ecm-sim">
