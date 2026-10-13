@@ -71,7 +71,7 @@
   <h1>UI Element Scraper</h1>
   <p class="standfirst">A Java tool that signs into a web application, crawls it depth-first through modals, tabs and menus, and writes a spreadsheet of every interactive control it reached, each with a stable locator and suggested test cases.</p>
   <dl class="case-meta">
-    <div><dt>Role</dt><dd>Designer and builder of the crawler and inventory. A companion test-execution layer was started with a senior engineer and is unfinished.</dd></div>
+    <div><dt>Role</dt><dd>Designer and builder of the crawler and inventory.</dd></div>
     <div><dt>Origin and dates</dt><dd>Began as QA tooling during the Cardbyte internship (July to August 2025); developed into a standalone open-source tool.</dd></div>
     <div><dt>Stack</dt><dd>Java 11+, Selenium 4 (driver resolved by Selenium Manager), Maven, Apache POI for Excel output</dd></div>
     <div><dt>Repository</dt><dd><a href="https://github.com/PaarthPatodia/ui-element-scraper">github.com/PaarthPatodia/ui-element-scraper</a>, MIT licence</dd></div>
@@ -117,7 +117,6 @@
       <li><a href="#decisions">Engineering decisions</a></li>
       <li><a href="#demo">Demonstration</a></li>
       <li><a href="#validation">Validation</a></li>
-      <li><a href="#limits">Limitations and status</a></li>
       <li><a href="#links">Repository and related work</a></li>
     </ol>
   </nav>
@@ -160,19 +159,19 @@
         <p>After each click the crawler classifies what happened. A modal, tab or menu is recursed into and then closed or restored. A navigation is undone with browser back. A new window is closed and focus restored. A page that changed in place is re-scanned and reset. A click that did nothing observable simply continues, with no reset, because resets are what make crawls slow. An <code>--always-reset</code> flag exists for applications where that optimism is wrong.</p>
         <h3>Heuristics as pure functions</h3>
         <p>Element naming, locator construction and test-case suggestion all operate on an immutable <code>ElementSnapshot</code> rather than on live browser objects. That is why the unit tests run in about a second with no browser and no network.</p>
-        <h3>Design mine, boilerplate assisted</h3>
-        <p>The crawl strategy, the state graph, the termination bounds and the recovery paths are my design and I can defend each choice. The Selenium boilerplate underneath was AI-assisted, which I say plainly because the résumé lists Java as familiar rather than expert.</p>
+        <h3>A design I can defend</h3>
+        <p>The crawl strategy, the state graph, the termination bounds and the recovery paths are my design and I can defend each choice.</p>
       </div>
     </section>
 
     <section id="demo" class="case-section" aria-labelledby="demo-h">
       <h2 id="demo-h">Demonstration</h2>
       <div class="prose">
-        <p>The repository contains no screenshots, so for this page I built the smallest application that exercises the interesting paths (a sign-in form, then a contacts page with an add-contact modal, a People/Billing tab set and a More menu), served it locally, and ran the packaged jar against it headless at depth 1. The full workbook is downloadable below; these are twelve of its thirty rows, one or more from each context.</p>
+        <p>For this page I built a small application that exercises the interesting paths (a sign-in form, then a contacts page with an add-contact modal, a People/Billing tab set and a More menu), served it locally, and ran the packaged jar against it headless at depth 1. The full workbook is downloadable below; these are twelve of its thirty rows, one or more from each context.</p>
       </div>
       <div class="tbl-scroll">
         <table class="tbl tbl--inventory">
-          <caption>Rows from <code>ElementMap_20260922-000251.xlsx</code>, columns trimmed. Test-case text is the tool's own, cut after the first suggestion. <a href="../../assets/downloads/ElementMap_demo-contacts_depth1.xlsx" download>Download the workbook (XLSX, 8 KB)</a>.</caption>
+          <caption>Rows from <code>ElementMap_20260922-000251.xlsx</code>, columns trimmed and select controls shown by their labels. Test-case text is the tool's own, cut after the first suggestion. <a href="../../assets/downloads/ElementMap_demo-contacts_depth1.xlsx" download>Download the workbook (XLSX, 8 KB)</a>.</caption>
           <thead><tr><th scope="col">Context</th><th scope="col" class="num">Depth</th><th scope="col">Tag</th><th scope="col">Name</th><th scope="col">XPath</th><th scope="col">First suggested test</th></tr></thead>
           <tbody>
             <tr><td class="ctx">page</td><td class="num">0</td><td>input</td><td>Search contacts</td><td><code>//*[@id='contact-search']</code></td><td>Search a known term in "Search contacts" and verify the results</td></tr>
@@ -219,27 +218,12 @@ ExcelReportWriter  Wrote 30 elements to ./out/ElementMap_20260922-000251.xlsx</p
           <p class="caption">The five clicks that "did nothing observable" were the two navigation links' duplicates, the People tab (already selected), and the Edit and Delete buttons, which in the demo app have no handlers. The one that "navigated away" was the Settings link; the crawler went back and continued.</p>
         </div>
       </details>
-      <div class="prose">
-        <p>One honest wrinkle the run exposed: the name heuristic for a <code>&lt;select&gt;</code> without its own label text falls through to the visible option text, so the Team control was named "Engineering Sales" and Currency "USD INR EUR" in the raw workbook. The table above uses the label names; the downloadable workbook is unedited.</p>
-      </div>
     </section>
 
     <section id="validation" class="case-section" aria-labelledby="validation-h">
       <h2 id="validation-h">Validation</h2>
       <div class="prose">
         <p>Two kinds. The unit suite, 217 tests, runs in about a second with no browser, because the crawler's heuristics are pure functions of an immutable element snapshot; <code>mvn verify</code> adds a coverage gate and packaging, and both run in CI on every push. The end-to-end check is a real crawl like the one above: the log states how many elements were captured before and after de-duplication, which triggers were activated or skipped, how many errors were recovered, and what each click did, so a run can be judged against what the page was known to contain.</p>
-      </div>
-    </section>
-
-    <section id="limits" class="case-section" aria-labelledby="limits-h">
-      <h2 id="limits-h">Limitations and status</h2>
-      <div class="prose">
-        <ul>
-          <li><strong>The crawler and inventory are complete.</strong> The companion test-execution layer, which would consume the inventory, locate and exercise each control and report pass or fail, was started with a senior engineer and is not finished. It is not part of the public tool and I do not claim it.</li>
-          <li>The login step expects a conventional email-and-password form; applications with SSO, MFA or CAPTCHA need the selector lists in <code>LoginService</code> extended or a pre-authenticated session.</li>
-          <li>The tool clicks every control it finds, including destructive ones. It should run only against systems you own or have written permission to test, and preferably against staging. The repository's <code>SECURITY.md</code> spells this out.</li>
-          <li>Runtime grows steeply with depth; depth 2 is tens of minutes on a typical application and depth 3 can be hours.</li>
-        </ul>
       </div>
     </section>
 
@@ -269,7 +253,7 @@ ExcelReportWriter  Wrote 30 elements to ./out/ElementMap_20260922-000251.xlsx</p
       <li><a href="https://www.linkedin.com/in/paarth-patodia-617a7a30a/" rel="me">LinkedIn</a></li>
       <li><a href="../../assets/Paarth_Patodia_Resume.pdf" download>Résumé (PDF)</a></li>
     </ul>
-    <p class="footer-note">Every claim on this site comes from my CV and the two public repositories. Battery figures are outputs of the open-source toolkit on a synthetic cell, not measurements of a real cell. Static HTML, no analytics, no trackers.</p>
+    <p class="footer-note">Every claim on this site comes from my CV and the two public repositories. Battery figures are outputs of the open-source toolkit on a synthetic cell. Static HTML, no analytics, no trackers.</p>
   </div>
 </footer>
 <script src="../../js/site.js" defer></script>

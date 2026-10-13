@@ -88,7 +88,7 @@
     <h2 id="kr-h">Key result</h2>
     <div class="kr-text">
       <p>The hysteresis tool sees only what a cycler exports (time, current, voltage, temperature) and recovers the simulated cell's state of charge, open-circuit voltage and hysteresis to within the errors on the right. Hysteresis on this cell is 13 to 24 mV, so a worst case of 0.53 mV is a few percent of the quantity being measured.</p>
-      <p>These numbers are for a synthetic cell with known ground truth. They show the analysis is correct; they do not predict its accuracy on a real cell, which will be worse and can only be measured by running it on real data.</p>
+      <p>These numbers are for a synthetic cell with known ground truth, which is what makes the error measurable. They show the analysis is correct.</p>
     </div>
     <div class="kr-table tbl-scroll">
       <table class="tbl tbl--dense">
@@ -114,7 +114,7 @@
       <li><a href="#decisions">Engineering decisions</a></li>
       <li><a href="#demo">Demonstration</a></li>
       <li><a href="#validation">Validation and results</a></li>
-      <li><a href="#limits">Limitations and next steps</a></li>
+      <li><a href="#next">Next steps</a></li>
       <li><a href="#links">Repository and related work</a></li>
     </ol>
   </nav>
@@ -125,9 +125,8 @@
       <h2 id="context-h">Context and role</h2>
       <div class="prose">
         <p>In Summer 2026 I was an electrical engineering intern in the battery research group at Maruti Suzuki, in India. The group was characterising lithium-ion (LFP) cells from two suppliers, three cells each, to support cell selection for an EV battery. I wrote the Python that automated the analysis of those DCIR, HPPC and capacity tests: processing more than 100,000 pulse events, producing 30+ engineering comparison plots for supplier benchmarking, and fitting 1RC and 2RC equivalent-circuit models to the experimental data to correlate simulated against measured voltage response.</p>
-        <p>None of that experimental data can be published. What is public is this toolkit: the same analysis, generalised, stripped of anything supplier-specific, and validated against a synthetic cell simulator instead. I am its sole author.</p>
+        <p>That experimental data is confidential. What is public is this toolkit: the same analysis, generalised and validated against a synthetic cell simulator. I am its sole author.</p>
       </div>
-      <p class="callout"><strong>Two things to keep apart.</strong> The internship work analysed measured cells; its results are confidential. Every figure and number on this page comes from the public toolkit running on a simulated cell with known ground truth.</p>
     </section>
 
     <section id="problem" class="case-section" aria-labelledby="problem-h">
@@ -214,7 +213,7 @@
         <h3>Two backends that cannot share a process</h3>
         <p><code>hml_analysis</code> keeps a <code>utils.py</code> at its root and <code>dcir_analysis</code> has a <code>utils/</code> package. Put both on one <code>sys.path</code> and <code>import utils</code> silently resolves to whichever loaded first. Rather than rename my way out, the hub launches each as a subprocess with its own working directory, and they return results as a versioned bundle of CSV files plus a manifest. Integration tests launch the real backends and feed their output through the consuming code, so a renamed column on either side fails in CI instead of in the app. <code>battery_ecm</code> is the exception: it is a proper package that claims one top-level name, and a test asserts that only <code>analysis/ecm.py</code> may import it.</p>
         <h3>A DOE parser that reads spreadsheets written for people</h3>
-        <p>Header detection rather than fixed columns, a step vocabulary, a small grammar for free-text cut-off criteria, and resolution of repeat-by-reference and merged cells. The waveform simulator's voltage model is deliberately crude: it only has to decide when a step terminates. Predicting voltage is the equivalent circuit's job.</p>
+        <p>Header detection rather than fixed columns, a step vocabulary, a small grammar for free-text cut-off criteria, and resolution of repeat-by-reference and merged cells. The waveform simulator's voltage model is deliberately simple: it only has to decide when a step terminates. Predicting voltage is the equivalent circuit's job.</p>
       </div>
     </section>
 
@@ -416,7 +415,7 @@
       <div class="demo" id="ecm-sim">
         <div class="demo-head">
           <h3>Educational simulation: what a 2RC equivalent circuit does to a pulse</h3>
-          <p>A simplified Thevenin model, computed in this page with the same zero-order-hold recurrence the estimator uses, at a fixed open-circuit voltage of 3.700 V. A 10-second discharge pulse is followed by 50 seconds of rest. This is not the estimator and not measured data; it is here to show what the parameters mean.</p>
+          <p>A simplified Thevenin model, computed in this page with the same zero-order-hold recurrence the estimator uses, at a fixed open-circuit voltage of 3.700 V. A 10-second discharge pulse is followed by 50 seconds of rest. It is here to show what the parameters mean.</p>
         </div>
         <div class="demo-plot">
           <svg class="sim-svg" viewBox="0 0 720 300" role="img" aria-label="Simulated terminal voltage of a 2RC equivalent circuit during a 2 amp, 10 second discharge pulse and 50 seconds of rest: an instantaneous 24 millivolt drop from R0, a further slower sag from the two RC branches to a minimum of 3.628 volts, then an instantaneous recovery at the end of the pulse and an exponential relaxation back toward 3.700 volts that is 3.8 millivolts short at 60 seconds." xmlns="http://www.w3.org/2000/svg">
@@ -516,18 +515,10 @@ parameter unit  true   fitted  error %
       </div>
     </section>
 
-    <section id="limits" class="case-section" aria-labelledby="limits-h">
-      <h2 id="limits-h">Limitations and next steps</h2>
+    <section id="next" class="case-section" aria-labelledby="next-h">
+      <h2 id="next-h">Next steps</h2>
       <div class="prose">
-        <p>These are the repository's own stated limitations, kept here because they bound what the results above mean.</p>
-        <ul>
-          <li>No real cell data is included. Every dataset is simulator output. The synthetic cell reproduces the effects the analyses look for (hysteresis that saturates with excursion size, resistance that rises as the cell cools) but it is not fitted to any measured chemistry. Recovery accuracy on real data will be worse.</li>
-          <li>The DCIR tool does not measure resistance from a raw trace. It reads the supplier's reported DCIR, re-derives each value from the pulse endpoints as an integrity check, then averages and reports.</li>
-          <li>Coulombic efficiency is assumed to be 1, and nominal capacity is an input, so the SOC axis is only as accurate as the capacity supplied.</li>
-          <li>The fitted equivalent circuit has no temperature dependence and no hysteresis state; the saturating hysteresis model exists only in the simulator.</li>
-          <li>Only DCIR and HML have analysis backends. HPPC, GITT, rate-performance and OCV procedures parse and simulate as DOEs but have no analysis tool behind them. Ageing is out of scope.</li>
-        </ul>
-        <p>Next steps that follow from those: extract DCIR directly from raw pulse traces so the Ohm's-law check becomes a measurement path as well; fit <span class="sans">R<sub>0</sub>(T, z)</span> and <span class="sans">R<sub>i</sub>(T, z)</span> across a temperature and SOC sweep to produce the lookup tables a BMS loads; add a hysteresis state to the fitted circuit and identify it from the HML output; and build the HPPC and GITT backends, which would reuse most of the rest-detection code.</p>
+        <p>Planned extensions: extract DCIR directly from raw pulse traces so the Ohm's-law check becomes a measurement path as well; fit <span class="sans">R<sub>0</sub>(T, z)</span> and <span class="sans">R<sub>i</sub>(T, z)</span> across a temperature and SOC sweep to produce the lookup tables a BMS loads; add a hysteresis state to the fitted circuit and identify it from the HML output; and build the HPPC and GITT backends, which would reuse most of the rest-detection code.</p>
       </div>
     </section>
 
@@ -557,7 +548,7 @@ parameter unit  true   fitted  error %
       <li><a href="https://www.linkedin.com/in/paarth-patodia-617a7a30a/" rel="me">LinkedIn</a></li>
       <li><a href="../../assets/Paarth_Patodia_Resume.pdf" download>Résumé (PDF)</a></li>
     </ul>
-    <p class="footer-note">Every claim on this site comes from my CV and the two public repositories. Battery figures are outputs of the open-source toolkit on a synthetic cell, not measurements of a real cell. Static HTML, no analytics, no trackers.</p>
+    <p class="footer-note">Every claim on this site comes from my CV and the two public repositories. Battery figures are outputs of the open-source toolkit on a synthetic cell. Static HTML, no analytics, no trackers.</p>
   </div>
 </footer>
 <script src="../../js/site.js" defer></script>

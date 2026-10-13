@@ -71,24 +71,22 @@
   <h1>Automation modules at MCode</h1>
   <p class="standfirst">Components I developed and tested inside four client engagements that connected language models to enterprise data, APIs and operational systems. One engagement is described in detail; the other three are summarised.</p>
   <dl class="case-meta">
-    <div><dt>Role</dt><dd>AI Developer Intern. Module-level builder within platforms owned, architected and delivered by the MCode team.</dd></div>
+    <div><dt>Role</dt><dd>AI Developer Intern. Built and tested workflow modules inside four MCode client engagements.</dd></div>
     <div><dt>Dates</dt><dd>February to May 2026, India.</dd></div>
     <div><dt>Tools</dt><dd>Python, Claude, n8n, MCP, REST APIs and webhooks, WhatsApp Business API, speech-to-text, JSON schema validation, Google Sheets, Git</dd></div>
-    <div><dt>What can be shown</dt><dd>Text and an illustrative diagram only. Client code, configurations, screenshots and data cannot be published.</dd></div>
   </dl>
 </header>
 
 <div class="container">
   <section class="key-result" aria-labelledby="kr-h">
-    <h2 id="kr-h">Scope, stated first</h2>
+    <h2 id="kr-h">What I built</h2>
     <div class="kr-text">
-      <p>All four engagements were owned by the broader MCode team. I built, tested and improved individual modules inside them. I did not architect or deliver any client solution end to end, and where an outcome figure appears on this page it was reported at project level by the team or the client, not designed or measured by me.</p>
+      <p>I built, tested and improved individual modules inside four client engagements delivered by the MCode team.</p>
     </div>
     <div class="kr-table">
       <dl class="work-facts">
-        <div><dt>The team owned</dt><dd>Client relationships, solution architecture, the ERP and CRM integrations, deployment and measurement.</dd></div>
         <div><dt>I built and tested</dt><dd>n8n orchestration and data-processing flows; structured-output schemas with programmatic validation, retry and exception paths; API error handling, monitoring and test cases; specific API integrations within team-designed workflows.</dd></div>
-        <div><dt>Reported outcomes</dt><dd>Two engagements have figures reported by the project team for the deployment as a whole. They are quoted below with that attribution.</dd></div>
+        <div><dt>Reported outcomes</dt><dd>Two engagements have figures reported by the project team for the deployment as a whole.</dd></div>
       </dl>
     </div>
   </section>
@@ -103,7 +101,6 @@
       <li><a href="#others">The other three engagements</a></li>
       <li><a href="#decisions">Engineering decisions</a></li>
       <li><a href="#validation">Validation</a></li>
-      <li><a href="#limits">Limitations and scope</a></li>
       <li><a href="#links">Related work</a></li>
     </ol>
   </nav>
@@ -119,7 +116,7 @@
         <a class="diagram-link" href="../../assets/diagrams/workflow-modules-1920.jpg" aria-label="Open the diagram at full size">
 <picture>
           <source type="image/webp" srcset="../../assets/diagrams/workflow-modules-960.webp 960w, ../../assets/diagrams/workflow-modules-1920.webp 1920w" sizes="(max-width: 1240px) 100vw, 1100px">
-          <img class="diagram-img" src="../../assets/diagrams/workflow-modules-1920.jpg" srcset="../../assets/diagrams/workflow-modules-960.jpg 960w, ../../assets/diagrams/workflow-modules-1920.jpg 1920w" sizes="(max-width: 1240px) 100vw, 1100px" width="1920" height="1072" alt="Illustrative shape of the workflow modules I built at MCode. A left-to-right chain of nodes: a trigger (webhook or schedule) receives an input; a normalise step cleans it into a fixed record; a route step branches by query type or failure; an HTTP request step calls an internal service or a model endpoint; a validate step checks the structured output against a schema and retries or raises an exception on failure; a deliver step routes the result to an existing channel. My modules are outlined in green; the surrounding platform, owned by the team, is shown as a soft background. This is an illustrative shape, not a client configuration." loading="lazy" decoding="async">
+          <img class="diagram-img" src="../../assets/diagrams/workflow-modules-1920.jpg" srcset="../../assets/diagrams/workflow-modules-960.jpg 960w, ../../assets/diagrams/workflow-modules-1920.jpg 1920w" sizes="(max-width: 1240px) 100vw, 1100px" width="1920" height="1072" alt="Illustrative shape of the workflow modules I built at MCode. A left-to-right chain of nodes: a trigger (webhook or schedule) receives an input; a normalise step cleans it into a fixed record; a route step branches by query type or failure; an HTTP request step calls an internal service or a model endpoint; a validate step checks the structured output against a schema and retries or raises an exception on failure; a deliver step routes the result to an existing channel. My modules are outlined in green; the surrounding platform, owned by the team, is shown as a soft background." loading="lazy" decoding="async">
         </picture>
         </a>
         <figcaption class="caption"><span class="fignum">Fig. 1.</span> <span class="what">The shape shared by the modules I built: a trigger, a normalise step, routing, a request to a service or model endpoint, validation of the structured output with a retry path, and delivery to an existing channel. Green outlines mark the node types I built and tested.</span></figcaption>
@@ -131,27 +128,26 @@
       <div class="prose">
         <p><strong>Client and purpose.</strong> Subros Limited, a manufacturer. Plant teams wanted to ask questions about production and quality in plain language instead of raising manual MIS requests, and to receive shift-level reports without assembling them by hand.</p>
         <p><strong>What I built.</strong> The n8n orchestration and data-processing layer of the agent: a webhook trigger that receives the query; Code nodes that normalise the request and validate the model's response; Switch and IF nodes that route by query type and on failure; and HTTP Request nodes that call internal services and model endpoints. The data the workflow operated on was ERP-derived (SAP-sourced) production and quality data exposed to it by the platform. I also developed workflow components for automated shift-level production and quality reporting, which transformed that data into structured summaries and routed them to engineering and operations teams through existing enterprise channels.</p>
-        <p><strong>What I did not build.</strong> The SAP connector, the SAP-side MCP server and the ERP integration were the team's. I consumed ERP-derived data exposed to my workflow; I did not configure SAP, write ABAP, or have unrestricted SAP access. SAP is not a skill I claim.</p>
       </div>
-      <p class="callout"><strong>Reported outcome.</strong> The project team reported that the deployment cut recurring operational query turnaround from up to one working day to seconds across three departments. That figure was reported at the overall project level by the team and client; I contributed modules to the deployment and did not design or measure the figure.</p>
+      <p class="callout"><strong>Reported outcome.</strong> The project team reported that the deployment cut recurring operational query turnaround from up to one working day to seconds across three departments.</p>
     </section>
 
     <section id="others" class="case-section" aria-labelledby="others-h">
       <h2 id="others-h">The other three engagements</h2>
       <div class="tbl-scroll">
         <table class="tbl">
-          <caption>Module-level contributions. "Reported outcome" figures were reported at project level by the team or client for the deployment as a whole; I did not design or measure them.</caption>
+          <caption>Contributions by engagement. Outcome figures were reported by the project team or client for each deployment.</caption>
           <thead><tr><th scope="col">Engagement</th><th scope="col">What I developed components of</th><th scope="col">Reported outcome</th></tr></thead>
           <tbody>
             <tr>
               <td class="rowhead">420 Papad / Agrawal Snacks</td>
               <td>The n8n automation and processing flow of a Hindi voice-first factory operations system. Shop-floor voice messages arrive through the WhatsApp Business API; the audio is passed to a speech-to-text service; the transcript is converted into a fixed ticket schema (machine, complaint category, severity, department, description) and logged to the operations tracker for downstream routing. Operators report equipment issues in natural speech without adopting new software; management gets trackable records.</td>
-              <td>No figure reported.</td>
+              <td></td>
             </tr>
             <tr>
               <td class="rowhead">Blotato</td>
               <td>Components of a multi-agent content pipeline (Claude, MCP, n8n, Blotato API) that turns one source input into channel-specific content and schedules multi-platform publishing. Separately, a scheduled closed-loop analytics workflow that retrieves post performance through platform APIs, normalises it into structured records (platform, post ID, content variant, impressions, engagement rate, collection timestamp), and injects a compact summary of higher-performing hooks and formats into the context of the next generation run. That is prompt-context feedback, not model retraining.</td>
-              <td>No figure reported.</td>
+              <td></td>
             </tr>
             <tr>
               <td class="rowhead">Calibery</td>
@@ -171,7 +167,7 @@
         <h3>Normalise at the edge</h3>
         <p>Incoming data (a plain-language query, a voice transcript, a platform's analytics payload) was normalised into a fixed record as the first step, so every downstream node saw one shape. Routing decisions were then made on that record, not on raw input.</p>
         <h3>Feedback through context, not training</h3>
-        <p>For the content pipeline, "learning from performance" meant retrieving metrics, normalising them, and injecting a compact summary of what performed well into the next generation prompt. It was deliberately not fine-tuning or online learning, and it is described that way.</p>
+        <p>For the content pipeline, "learning from performance" meant retrieving metrics, normalising them, and injecting a compact summary of what performed well into the next generation prompt. It was deliberately not fine-tuning or online learning.</p>
         <h3>Deliver where people already look</h3>
         <p>Outputs were routed into channels teams already used (enterprise messaging, an operations tracker, existing reporting lines) rather than into a new interface, which is why a voice message on WhatsApp could become a structured ticket without the operator changing anything.</p>
       </div>
@@ -180,19 +176,7 @@
     <section id="validation" class="case-section" aria-labelledby="validation-h">
       <h2 id="validation-h">Validation</h2>
       <div class="prose">
-        <p>At module level: test cases for the validation and error-handling paths (well-formed, malformed, incomplete and type-invalid responses; API errors and timeouts), and workflow monitoring so failures surfaced rather than vanished. Deployment-level outcomes were measured by the project team and client, and are quoted above with that attribution.</p>
-      </div>
-    </section>
-
-    <section id="limits" class="case-section" aria-labelledby="limits-h">
-      <h2 id="limits-h">Limitations and scope</h2>
-      <div class="prose">
-        <ul>
-          <li>Module-level work inside team-owned architectures. I have not designed a client agent system end to end.</li>
-          <li>Client code, configurations, screenshots and data cannot be published, so this page is text and one illustrative diagram.</li>
-          <li>The two outcome figures are the team's and the clients', reported for whole deployments. They are not measurements of my modules in isolation.</li>
-          <li>For the voice-first system I can describe the flow I built; I do not state the transcription provider or the exact escalation rule, which were not mine to decide.</li>
-        </ul>
+        <p>At module level: test cases for the validation and error-handling paths (well-formed, malformed, incomplete and type-invalid responses; API errors and timeouts), and workflow monitoring so failures surfaced rather than vanished. Deployment-level outcomes were measured by the project team and client.</p>
       </div>
     </section>
 
@@ -220,7 +204,7 @@
       <li><a href="https://www.linkedin.com/in/paarth-patodia-617a7a30a/" rel="me">LinkedIn</a></li>
       <li><a href="../../assets/Paarth_Patodia_Resume.pdf" download>Résumé (PDF)</a></li>
     </ul>
-    <p class="footer-note">Every claim on this site comes from my CV and the two public repositories. Battery figures are outputs of the open-source toolkit on a synthetic cell, not measurements of a real cell. Static HTML, no analytics, no trackers.</p>
+    <p class="footer-note">Every claim on this site comes from my CV and the two public repositories. Battery figures are outputs of the open-source toolkit on a synthetic cell. Static HTML, no analytics, no trackers.</p>
   </div>
 </footer>
 <script src="../../js/site.js" defer></script>

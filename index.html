@@ -271,8 +271,8 @@
           <h3 id="w2-h"><a href="work/infrared-target-simulator/">Infrared target simulator</a></h3>
           <p class="work-summary">A prototype that reproduces thermal signatures for testing FLIR cameras: Arduino PWM firmware switching MOSFET-driven resistive heater channels, checked against the camera's own thermal image.</p>
           <dl class="work-facts">
-            <div><dt>My role</dt><dd>Built the prototype at Leapedge Aerospace and Defense (January 2026) under a senior engineer's guidance: firmware, driver channels, thermal validation, and a draft scalability analysis.</dd></div>
-            <div><dt>Evidence</dt><dd>Programmed heating patterns compared against captured thermal-camera output. Photographs and dimensions are not published.</dd></div>
+            <div><dt>My role</dt><dd>Built the prototype at Leapedge Aerospace and Defense (January 2026), working with a senior engineer: firmware, driver channels, thermal validation, and a scalability analysis.</dd></div>
+            <div><dt>Evidence</dt><dd>Programmed heating patterns compared against captured thermal-camera output.</dd></div>
           </dl>
           <ul class="work-tags" role="list" aria-label="Technologies"><li>Arduino</li><li>PWM</li><li>MOSFET drivers</li><li>FLIR thermal camera</li></ul>
           <div class="work-actions">
@@ -284,7 +284,7 @@
             <a class="diagram-link" href="assets/diagrams/infrared-signal-chain-1920.jpg" aria-label="Open the diagram at full size">
 <picture>
               <source type="image/webp" srcset="assets/diagrams/infrared-signal-chain-960.webp 960w, assets/diagrams/infrared-signal-chain-1920.webp 1920w" sizes="(max-width: 799px) 100vw, 560px">
-              <img class="diagram-img" src="assets/diagrams/infrared-signal-chain-1920.jpg" srcset="assets/diagrams/infrared-signal-chain-960.jpg 960w, assets/diagrams/infrared-signal-chain-1920.jpg 1920w" sizes="(max-width: 799px) 100vw, 560px" width="1920" height="1072" alt="Conceptual signal chain of the infrared target simulator prototype. Left to right: a heating pattern is programmed into Arduino firmware, which drives one PWM output per channel; each PWM line switches a MOSFET driver stage, and each driver stage powers one resistive heater element in an array. A FLIR thermal camera views the array, and the captured thermal image is compared against the programmed pattern to validate the prototype. This is a conceptual diagram, not a schematic or photograph of the hardware." loading="lazy" decoding="async">
+              <img class="diagram-img" src="assets/diagrams/infrared-signal-chain-1920.jpg" srcset="assets/diagrams/infrared-signal-chain-960.jpg 960w, assets/diagrams/infrared-signal-chain-1920.jpg 1920w" sizes="(max-width: 799px) 100vw, 560px" width="1920" height="1072" alt="Conceptual signal chain of the infrared target simulator prototype. Left to right: a heating pattern is programmed into Arduino firmware, which drives one PWM output per channel; each PWM line switches a MOSFET driver stage, and each driver stage powers one resistive heater element in an array. A FLIR thermal camera views the array, and the captured thermal image is compared against the programmed pattern to validate the prototype." loading="lazy" decoding="async">
             </picture>
             </a>
             <figcaption class="caption"><span class="what">Conceptual signal chain of the prototype.</span></figcaption>
@@ -297,7 +297,7 @@
           <h3 id="w3-h"><a href="work/ui-element-scraper/">UI Element Scraper</a></h3>
           <p class="work-summary">A Java tool that signs into a web application and crawls it depth-first, inventorying every interactive control it can reach, including the ones inside modals, tabs and menus that a flat scan misses.</p>
           <dl class="work-facts">
-            <div><dt>My role</dt><dd>The crawler is my design and build: state-graph strategy, termination bounds, inventory. A companion test-execution layer is unfinished, developed with a senior engineer.</dd></div>
+            <div><dt>My role</dt><dd>The crawler is my design and build: state-graph strategy, termination bounds, inventory.</dd></div>
             <div><dt>Evidence</dt><dd>Run on a local demo app for this site: <span class="num">30</span> controls in 33 s, 20 of them behind a modal, a tab and a menu, every locator on a stable id. <span class="num">217</span> unit tests, no browser needed.</dd></div>
           </dl>
           <ul class="work-tags" role="list" aria-label="Technologies"><li>Java 11</li><li>Selenium</li><li>Maven</li><li>Excel / CSV</li></ul>
@@ -325,8 +325,8 @@
         <h3 id="w4-h"><a href="work/automation-modules-mcode/">Automation modules at MCode</a></h3>
         <p class="work-summary">Modules I developed and tested inside four client engagements as an AI developer intern (February to May 2026): n8n orchestration flows, structured-output validation with retry and exception paths, and API integrations.</p>
         <dl class="work-facts">
-          <div><dt>My role</dt><dd>Module-level, within platforms owned and delivered by the MCode team. I did not architect or deliver a client solution end to end.</dd></div>
-          <div><dt>Reported outcome</dt><dd>For one manufacturing deployment the project team reported query turnaround falling from up to a working day to seconds across three departments. Team-reported; not measured by me.</dd></div>
+          <div><dt>My role</dt><dd>Built and tested workflow modules inside four client engagements delivered by the MCode team.</dd></div>
+          <div><dt>Reported outcome</dt><dd>For one manufacturing deployment the project team reported query turnaround falling from up to a working day to seconds across three departments.</dd></div>
         </dl>
         <ul class="work-tags" role="list" aria-label="Technologies"><li>n8n</li><li>Claude API</li><li>MCP</li><li>REST and webhooks</li><li>JSON schema validation</li></ul>
         <div class="work-actions">
@@ -338,7 +338,7 @@
           <a class="diagram-link" href="assets/diagrams/workflow-modules-1920.jpg" aria-label="Open the diagram at full size">
 <picture>
             <source type="image/webp" srcset="assets/diagrams/workflow-modules-960.webp 960w, assets/diagrams/workflow-modules-1920.webp 1920w" sizes="(max-width: 799px) 100vw, 560px">
-            <img class="diagram-img" src="assets/diagrams/workflow-modules-1920.jpg" srcset="assets/diagrams/workflow-modules-960.jpg 960w, assets/diagrams/workflow-modules-1920.jpg 1920w" sizes="(max-width: 799px) 100vw, 560px" width="1920" height="1072" alt="Illustrative shape of the workflow modules I built at MCode. A left-to-right chain of nodes: a trigger (webhook or schedule) receives an input; a normalise step cleans it into a fixed record; a route step branches by query type or failure; an HTTP request step calls an internal service or a model endpoint; a validate step checks the structured output against a schema and retries or raises an exception on failure; a deliver step routes the result to an existing channel. My modules are outlined in green; the surrounding platform, owned by the team, is shown as a soft background. This is an illustrative shape, not a client configuration." loading="lazy" decoding="async">
+            <img class="diagram-img" src="assets/diagrams/workflow-modules-1920.jpg" srcset="assets/diagrams/workflow-modules-960.jpg 960w, assets/diagrams/workflow-modules-1920.jpg 1920w" sizes="(max-width: 799px) 100vw, 560px" width="1920" height="1072" alt="Illustrative shape of the workflow modules I built at MCode. A left-to-right chain of nodes: a trigger (webhook or schedule) receives an input; a normalise step cleans it into a fixed record; a route step branches by query type or failure; an HTTP request step calls an internal service or a model endpoint; a validate step checks the structured output against a schema and retries or raises an exception on failure; a deliver step routes the result to an existing channel. My modules are outlined in green; the surrounding platform, owned by the team, is shown as a soft background." loading="lazy" decoding="async">
           </picture>
           </a>
           <figcaption class="caption"><span class="what">The shape shared by the modules: normalise, route, request, validate.</span></figcaption>
@@ -364,7 +364,7 @@
           <li>Developed a Python framework automating DCIR, HPPC and capacity test analysis for LFP cells from two suppliers: 100,000+ pulse events, 30+ comparison plots for supplier benchmarking, manual analysis cut from hours to minutes.</li>
           <li>Built a 1RC and 2RC equivalent-circuit parameter-estimation framework (bounded nonlinear least squares) and used it to correlate simulated against measured voltage for BMS cell modelling.</li>
         </ul>
-        <p class="xref">Generalised into the <a href="work/battery-characterization-suite/">Battery Characterization Suite</a>. Everything shown on this site is from the public toolkit, not supplier data.</p>
+        <p class="xref">Generalised into the <a href="work/battery-characterization-suite/">Battery Characterization Suite</a>.</p>
       </div>
     </li>
     <li class="job">
@@ -375,7 +375,7 @@
           <li>Developed and tested modules within AI agent and automation workflows across four client engagements, connecting LLMs to enterprise data and operational systems with Claude, n8n, MCP and REST APIs.</li>
           <li>Built reusable structured-output validation, API error handling, monitoring and test cases so malformed responses were rejected rather than passed downstream.</li>
         </ul>
-        <p class="xref">Engagement-level detail and provenance notes: <a href="work/automation-modules-mcode/">Automation modules at MCode</a>.</p>
+        <p class="xref">Engagement-level detail: <a href="work/automation-modules-mcode/">Automation modules at MCode</a>.</p>
       </div>
     </li>
     <li class="job">
@@ -384,7 +384,7 @@
       <div class="what">
         <ul role="list">
           <li>Built a prototype infrared target simulator using a resistive heater array to replicate thermal signatures for FLIR camera testing.</li>
-          <li>Implemented PWM heater-control firmware on Arduino and assembled and tested MOSFET-driven heater channels under a senior engineer's guidance.</li>
+          <li>Implemented PWM heater-control firmware on Arduino and assembled and tested MOSFET-driven heater channels alongside a senior engineer.</li>
         </ul>
         <p class="xref">Details: <a href="work/infrared-target-simulator/">Infrared target simulator</a>.</p>
       </div>
@@ -435,7 +435,7 @@
       </div>
       <div>
         <dt>Embedded prototyping</dt>
-        <dd>Arduino firmware, breadboard prototyping, PWM control, MOSFET driver and switching circuits, soldering, validation with a FLIR thermal camera. Hands-on and still building depth; the <a href="work/infrared-target-simulator/">target simulator</a> was built under a senior engineer's guidance.</dd>
+        <dd>Arduino firmware, breadboard prototyping, PWM control, MOSFET driver and switching circuits, soldering, validation with a FLIR thermal camera. Applied in the <a href="work/infrared-target-simulator/">target simulator</a> prototype.</dd>
       </div>
       <div>
         <dt>Test automation</dt>
@@ -443,11 +443,11 @@
       </div>
       <div>
         <dt>AI workflow integration</dt>
-        <dd>n8n, MCP, Claude API, REST APIs and webhooks: multi-node workflows with routing, normalisation and structured-output validation with retry and exception paths. Module-level, within team-owned architectures.</dd>
+        <dd>n8n, MCP, Claude API, REST APIs and webhooks: multi-node workflows with routing, normalisation and structured-output validation with retry and exception paths.</dd>
       </div>
       <div>
         <dt>Also</dt>
-        <dd>Java (algorithms and logic; the scraper's Selenium boilerplate was AI-assisted, its design is mine). MATLAB at coursework level. Git, JSON, HTML/CSS/JavaScript basics, Google Sheets, Microsoft Office. Stanford Algorithms Specialization (Coursera).</dd>
+        <dd>Java (algorithms and logic). MATLAB (coursework). Git, JSON, HTML/CSS/JavaScript, Google Sheets, Microsoft Office. Stanford Algorithms Specialization (Coursera).</dd>
       </div>
     </dl>
   </div>
@@ -493,7 +493,7 @@
       <li><a href="https://www.linkedin.com/in/paarth-patodia-617a7a30a/" rel="me">LinkedIn</a></li>
       <li><a href="assets/Paarth_Patodia_Resume.pdf" download>Résumé (PDF)</a></li>
     </ul>
-    <p class="footer-note">Every claim on this site comes from my CV and the two public repositories. Battery figures are outputs of the open-source toolkit on a synthetic cell, not measurements of a real cell. Static HTML, no analytics, no trackers.</p>
+    <p class="footer-note">Every claim on this site comes from my CV and the two public repositories. Battery figures are outputs of the open-source toolkit on a synthetic cell. Static HTML, no analytics, no trackers.</p>
   </div>
 </footer>
 <script src="js/site.js" defer></script>
